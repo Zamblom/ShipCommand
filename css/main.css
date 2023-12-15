@@ -1,0 +1,419 @@
+* {
+    box-sizing: border-box;
+    position: absolute;
+    font-family: Roboto Mono;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+body {
+    margin: 0;
+}
+
+#battlemap {
+    width: 50vw;
+    height: 100vh;
+}
+
+#map {
+    width: 100%;
+    height: 50vh;
+    overflow: hidden;
+    background-color: black;
+    border: 0.4vw solid #333;
+}
+
+ship-deck {
+    left: 50%;
+    transform: translate(-50%, 0%);
+    height: 100%;
+    background-size: 100% 100%;
+    aspect-ratio: 20 / 13.2;
+}
+
+ship-deck#deck-b {
+    background-image: url("/deck_b.png");
+}
+
+ship-deck#deck-a {
+    background-image: url("/deck_a.png");
+}
+
+ship-room {
+    width: 100%;
+    height: 100%;
+}
+
+ship-room:hover {
+    background-color: rgba(255, 255, 0, 0.3);
+}
+
+ship-room.link:hover {
+    background-color: rgba(255, 100, 0, 0.3);
+}
+
+ship-room.available:hover {
+    background-color: rgba(150, 255, 100, 0.3);
+}
+
+ship-link.available:hover {
+    background-color: rgba(255, 150, 255, 0.3);
+}
+
+ship-room.current:hover {
+    background-color: rgba(50, 255, 50, 0.3);
+}
+
+ship-room#gun-turret-b {
+    clip-path: polygon(40% 30%, 60% 30%, 60% 50%, 40% 50%);
+}
+
+ship-room#hatch-from-gun-turret-b {
+    clip-path: polygon(40% 70%, 60% 70%, 60% 50%, 40% 50%);
+}
+
+ship-room#gun-turret-c {
+    clip-path: polygon(40% 30%, 60% 30%, 60% 50%, 40% 50%);
+}
+
+ship-room#hatch-from-gun-turret-c {
+    clip-path: polygon(40% 70%, 60% 70%, 60% 50%, 40% 50%);
+}
+
+ship-room#corridor {
+    clip-path: polygon(33.6% 41.8%, 33.6% 17%, 41% 17%, 41% 44.6%, 46.1% 44.6%, 46.1% 55.4%, 41% 55.4%, 41% 83%, 33.6% 83%, 33.6% 58.2%, 30% 52.6%, 32% 52.6%, 33% 51.6%, 33% 48.4%, 32% 47.4%, 30% 47.4%);
+}
+
+ship-room#gun-bay-b {
+    clip-path: polygon(30% 0.6%, 44.5% 0.6%, 44.5% 17%, 30% 17%);
+}
+
+ship-room#gun-bay-c {
+    clip-path: polygon(30% 99.4%, 44.5% 99.4%, 44.5% 83%, 30% 83%);
+}
+
+ship-room#gun-bay-d {
+    clip-path: polygon(46.1% 44.6%, 73.5% 44.6%, 73.5% 55.4%, 46.1% 55.4%);
+}
+
+ship-room#ladder-to-deck-a {
+    clip-path: polygon(30% 52.6%, 32% 52.6%, 33% 51.6%, 33% 48.4%, 32% 47.4%, 30% 47.4%);
+}
+
+ship-room#sled-bay {
+    clip-path: polygon(2.8% 23.9%, 33.6% 41.8%, 30% 47.4%, 30% 50%, 1% 50%, 1% 48%, 3% 46%, 3% 42%, 1% 40%, 1% 38%, 3% 36%, 3% 32%, 1% 30%, 1% 28%);
+}
+
+ship-room#engineers-quarter {
+    clip-path: polygon(2.8% 23.9%, 4.8% 19.8%, 30.4% 0.6%, 37.1% 0.6%, 37.1% 41.8%, 33.6% 41.8%);
+}
+
+ship-room#cargo-hold {
+    clip-path: polygon(37.1% 41.8%, 37.1% 0.6%, 44.8% 0.6%, 62.8% 14.5%, 64.6% 22.4%, 64.6% 28%, 46.4% 38.8%, 46.4% 44.6%, 41% 44.6%);
+}
+
+ship-room#med-bay {
+    clip-path: polygon(46.4% 44.6%, 46.4% 38.8%, 64.6% 28%, 64.6% 22.4%, 73.5% 22.4%, 73.5% 44.6%);
+}
+
+ship-room#cockpit {
+    clip-path: polygon(73.5% 22.4%, 88.3% 22.4%, 99.1% 33.4%, 99.1% 66.6%, 88.3% 77.6%, 73.5% 77.6%);
+}
+
+ship-room#brig {
+    clip-path: polygon(64.6% 55.4%, 64.6% 77.6%, 73.5% 77.6%, 73.5% 55.4%);
+}
+
+ship-room#monitoring {
+    clip-path: polygon(46.4% 55.4%, 46.4% 61.2%, 64.6% 72.0%, 64.6% 55.4%);
+}
+
+ship-room#living-area {
+    clip-path: polygon(2.8% 76.1%, 33.6% 58.2%, 37.1% 58.2%, 41% 55.4%, 46.4% 55.4%, 46.4% 61.2%, 64.6% 72%, 64.6% 77.6%, 3.4% 77.6%);
+}
+
+ship-room#mess-hall {
+    clip-path: polygon(37.1% 77.6%, 64.6% 77.6%, 62.8% 85.5%, 44.8% 99.4%, 37.1% 99.4%);
+}
+
+ship-room#crew-quarters {
+    clip-path: polygon(3.4% 77.6%, 37.1% 77.6%, 37.1% 99.4%, 30.4% 99.4%, 4.8% 80.2%);
+}
+
+ship-room#workshop {
+    clip-path: polygon(2.8% 76.1%, 33.6% 58.2%, 30% 52.6%, 30% 50%, 1% 50%, 1% 72%);
+}
+
+ship-room#hallway {
+    clip-path: polygon(33.6% 41.8%, 37.1% 41.8%, 41% 44.6%, 64.6% 44.6%, 64.6% 55.4%, 41% 55.4%, 37.1% 58.2%, 33.6% 58.2%, 30% 52.6%, 32% 51.6%, 32% 50%, 33.5% 50%, 34.5% 54%, 37.25% 55.5%, 40% 54%, 41% 50%, 40% 46%, 37.25% 44.5%, 34.5% 46%, 33.5% 50%, 32% 50%, 32% 48.4%, 30% 47.4%);
+}
+
+ship-room#security {
+    clip-path: polygon(64.6% 44.6%, 73.5% 44.6%, 73.5% 55.4%, 64.6% 55.4%);
+}
+
+ship-room#ladder-to-deck-b {
+    clip-path: polygon(30% 52.6%, 32% 51.6%, 32% 48.4%, 30% 47.4%);
+}
+
+ship-room#hatch-to-gun-turret-a {
+    clip-path: polygon(33.5% 50%, 34.5% 54%, 37.25% 55.5%, 40% 54%, 41% 50%, 40% 46%, 37.25% 44.5%, 34.5% 46%, 33.5% 50%);
+}
+
+ship-room#hatch-to-sled-a {
+    clip-path: polygon(1% 38%, 3% 36%, 3% 32%, 1% 30%);
+}
+
+ship-room#hatch-to-sled-b {
+    clip-path: polygon(1% 48%, 3% 46%, 3% 42%, 1% 40%);
+}
+
+.counter {
+    width: 0.65vw;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 0.15vw solid #000;
+    background-color: #59F;
+    transform: translate(-50%, -50%);
+}
+
+.current-counter {
+    background-color: #0F0;
+}
+
+#room-information {
+    top: 50%;
+    width: 100%;
+    height: 50vh;
+    background-color: #DDE;
+    margin: auto;
+    font-weight: bold;
+}
+
+#room-name {
+    background-color: #CCD;
+    clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 0% 100%);
+    height: 5vh;
+    width: 25.5vw;
+    position: absolute;
+    border-radius: 1vw 0 0 0;
+    font-size: 1.4vw;
+    line-height: 2.5vw;
+    border-radius: 1vw 0 0 0;
+    text-align: left;
+    padding-left: 1vw;
+}
+
+#room-data {
+    top: 12%;
+    left: 50%;
+    height: 85%;
+    width: 100%;
+    transform: translate(-50%, 0);
+}
+
+#room-description {
+    left: 2.5%;
+    width: 45%;
+    height: 100%;
+    font-size: 1vw;
+}
+
+#room-abilities {
+    left: 52.5%;
+    width: 45%;
+    height: 40vh;
+    font-size: 1vw;
+}
+
+.room-ability {
+    position: relative;
+    background-color: #DBB;
+    border: 0.2vw solid #CAA;
+    border-radius: 0.5vw;
+    width: 100%;
+    height: 12%;
+    font-size: 1.2vw;
+    line-height: 4vh;
+    margin-bottom: 1vh;
+    text-align: center;
+}
+
+.room-ability.active {
+    background-color: #FFF;
+    border: 0.2vw solid #AAB;
+}
+
+.room-ability.active:hover {
+    background-color: #BBC;
+}
+
+#statistics {
+    left: 50vw;
+    width: 50vw;
+    height: 100vh;
+}
+
+#player {
+    width: 100%;
+    height: 25%;
+    background-color: #BBC;
+}
+
+#player-name {
+    height: 17%;
+    width: 100%;
+    background: #EEF;
+    text-align: center;
+    font-size: 1.6vw;
+    font-weight: bold;
+}
+
+#revert-player {
+    top: 2.5%;
+    left: 1%;
+    width: 10%;
+    position: absolute;
+    text-align: center;
+    line-height: 3vh;
+    background-color: #DDE;
+    border-radius: 0.3vw;
+    font-size: 1vw;
+    font-weight: bold;
+}
+
+#revert-player:hover {
+    background-color: #CCD;
+}
+
+#stats-table {
+    top: 6vh;
+    background-color: #EEF;
+    border-spacing: 0.2vw;
+    table-layout: fixed;
+    width: 100%;
+    text-align: center;
+    font-size: 0.6vw;
+    padding: 0.1vh 0.1vw 0.1vh 0.1vw;
+    empty-cells: hide;
+}
+
+#stats-table * {
+    position: relative;
+}
+
+#stats-table td {
+    padding: 0.2vh 0.2vw 0.2vh 0.2vw;
+}
+
+#stats-table .abilities td:nth-child(2n - 1) {
+    font-weight: bold;
+}
+
+#stats-table .abilities td {
+    background-color: #CCD;
+    font-size: 0.75vw;
+}
+
+#stats-table .abilities td:hover {
+    background-color: #BBC;
+}
+
+#stats-table .saves td {
+    background-color: #D4D4E5
+}
+
+#stats-table .saves td:hover {
+    background-color: #C4C4D5;
+}
+
+#stats-table .skills td {
+    background-color: #DDE
+}
+
+#stats-table .skills td:hover {
+    background-color: #CCD;
+}
+
+#ship {
+    top: 25%;
+    width: 100%;
+    height: 75%;
+}
+
+#ship-name-border {
+    background-color: #AAA;
+    clip-path: polygon(0% 0%, 100% 0%, 88.9% 100%, 0% 100%);
+    height: 4.5vh;
+    width: 20.4vw;
+}
+
+#ship-name {
+    background-color: #CCD;
+    clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%);
+    height: 4vh;
+    width: 20vw;
+    font-size: 1.4vw;
+    line-height: 2vw;
+    font-weight: bold;
+    padding-left: 1vw;
+}
+
+#ship-data {
+    background-color: #EEE;
+    width: 100%;
+    height: 100%;
+    padding: 2%;
+}
+
+#ship-conditions {
+    top: 8%;
+    width: 50%;
+    height: 92%;
+    font-size: 1vw;
+}
+
+#ship-resources {
+    top: 8%;
+    left: 50%;
+    width: 50%;
+    height: 92%;
+    width: 50%;
+}
+
+#ship-resources * {
+    position: relative;
+}
+
+#ship-resources table {
+    border-spacing: 0.2vw;
+    table-layout: fixed;
+    width: 95%;
+}
+
+#ship-resources td {
+    background-color: #AAA;
+    height: 2.5vh;
+    padding: 0.2vh 0.2vw 0.2vh 0.2vw;
+    font-weight: bold;
+    text-align: center;
+}
+
+#ship-resources td:first-child {
+    border-radius: 0.5vw 0 0 0.5vw;
+    font-size: 1vw;
+}
+
+#ship-resources td:nth-child(2) {
+    clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%);
+}
+
+#ship-resources td:nth-child(n + 3) {
+    clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+}
+
+#ship-resources td:last-child {
+    border-radius: 0 0.5vw 0.5vw 0;
+    clip-path: polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%);
+}

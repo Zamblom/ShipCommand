@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ship Command</title>
+    <link href="main.css" rel="stylesheet">
+    <link href="dice.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
+    <script src="common.js"></script>
+    <script src="main.js"></script>
+    <script src="dice.js"></script>
+    <script src="helpers.js"></script>
+</head>
+
+<body>
+    <div id="battlemap">
+        <div id="map">
+            <ship-deck id="deck-gun-turret-b" hidden>
+                <ship-room id="gun-turret-b"></ship-room>
+                <ship-room id="hatch-from-gun-turret-b" class="link"></ship-room>
+            </ship-deck>
+            <ship-deck id="deck-gun-turret-c" hidden>
+                <ship-room id="gun-turret-c"></ship-room>
+                <ship-room id="hatch-from-gun-turret-c" class="link"></ship-room>
+            </ship-deck>
+            <ship-deck id="deck-b" hidden>
+                <ship-room id="corridor"></ship-room>
+                <ship-room id="gun-bay-b"></ship-room>
+                <ship-room id="gun-bay-c"></ship-room>
+                <ship-room id="gun-bay-d"></ship-room>
+                <ship-room id="ladder-to-deck-a" class="link"></ship-room>
+            </ship-deck>
+            <ship-deck id="deck-a">
+                <ship-room id="ladder-to-deck-b"></ship-room>
+                <ship-room id="sled-bay"></ship-room>
+                <ship-room id="engineers-quarter"></ship-room>
+                <ship-room id="cargo-hold"></ship-room>
+                <ship-room id="med-bay"></ship-room>
+                <ship-room id="cockpit"></ship-room>
+                <ship-room id="brig"></ship-room>
+                <ship-room id="monitoring"></ship-room>
+                <ship-room id="living-area"></ship-room>
+                <ship-room id="mess-hall"></ship-room>
+                <ship-room id="crew-quarters"></ship-room>
+                <ship-room id="workshop"></ship-room>
+                <ship-room id="hallway"></ship-room>
+                <ship-room id="security"></ship-room>
+                <ship-room id="hatch-to-gun-turret-a" class="link"></ship-room>
+                <ship-room id="hatch-to-sled-a" class="link"></ship-room>
+                <ship-room id="hatch-to-sled-b" class="link"></ship-room>
+            </ship-deck>
+            <ship-deck-selector style="top: 20%;" deck="deckGunTurretB" size="small">G:B</ship-deck-selector>
+            <ship-deck-selector style="top: 30%;" deck="deckGunTurretC" size="small">G:C</ship-deck-selector>
+            <ship-deck-selector style="top: 45%;" deck="deckB">B</ship-deck-selector>
+            <ship-deck-selector class="current selected" style="top: 60%;" deck="deckA">A</ship-deck-selector>
+        </div>
+        <div id="room-information">
+            <div id="room-name"></div>
+            <div id="room-data">
+                <div id="room-description"></div>
+                <div id="room-abilities"></div>
+            </div>
+        </div>
+    </div>
+    <div id="statistics">
+        <div id="player">
+            <div id="player-name">Name</div>
+            <div onclick="setPlayerStatistics();" id="revert-player" hidden>Back</div>
+            <table id="stats-table" width="100vw">
+                <colgroup>
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                </colgroup>
+                <tbody>
+                    <tr class="abilities">
+                        <td onclick="rollByLabel(this);">Strength</td>
+                        <td onclick="rollByValue(this);" id="stat-strength"></td>
+                        <td onclick="rollByLabel(this);">Dexterity</td>
+                        <td onclick="rollByValue(this);" id="stat-dexterity"></td>
+                        <td onclick="rollByLabel(this);">Constitution</td>
+                        <td onclick="rollByValue(this);" id="stat-constitution"></td>
+                        <td onclick="rollByLabel(this);">Intelligence</td>
+                        <td onclick="rollByValue(this);" id="stat-intelligence"></td>
+                        <td onclick="rollByLabel(this);">Wisdom</td>
+                        <td onclick="rollByValue(this);" id="stat-wisdom"></td>
+                        <td onclick="rollByLabel(this);">Charisma</td>
+                        <td onclick="rollByValue(this);" id="stat-charisma"></td>
+                    </tr>
+                    <tr class="saves">
+                        <td onclick="rollByLabel(this);">Saving Throw</td>
+                        <td onclick="rollByValue(this);" id="stat-strength-save"></td>
+                        <td onclick="rollByLabel(this);">Saving Throw</td>
+                        <td onclick="rollByValue(this);" id="stat-dexterity-save"></td>
+                        <td onclick="rollByLabel(this);">Saving Throw</td>
+                        <td onclick="rollByValue(this);" id="stat-constitution-save"></td>
+                        <td onclick="rollByLabel(this);">Saving Throw</td>
+                        <td onclick="rollByValue(this);" id="stat-intelligence-save"></td>
+                        <td onclick="rollByLabel(this);">Saving Throw</td>
+                        <td onclick="rollByValue(this);" id="stat-wisdom-save"></td>
+                        <td onclick="rollByLabel(this);">Saving Throw</td>
+                        <td onclick="rollByValue(this);" id="stat-charisma-save"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td onclick="rollByLabel(this);">Athletics</td>
+                        <td onclick="rollByValue(this);" id="stat-athletics"></td>
+                        <td onclick="rollByLabel(this);">Acrobatics</td>
+                        <td onclick="rollByValue(this);" id="stat-acrobatics"></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="rollByLabel(this);">Arcana</td>
+                        <td onclick="rollByValue(this);" id="stat-arcana"></td>
+                        <td onclick="rollByLabel(this);">Animal Handling</td>
+                        <td onclick="rollByValue(this);" id="stat-animal-handling"></td>
+                        <td onclick="rollByLabel(this);">Deception</td>
+                        <td onclick="rollByValue(this);" id="stat-deception"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td></td>
+                        <td></td>
+                        <td onclick="rollByLabel(this);">Sleight Of Hand</td>
+                        <td onclick="rollByValue(this);" id="stat-sleight-of-hand"></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="rollByLabel(this);">History</td>
+                        <td onclick="rollByValue(this);" id="stat-history"></td>
+                        <td onclick="rollByLabel(this);">Insight</td>
+                        <td onclick="rollByValue(this);" id="stat-insight"></td>
+                        <td onclick="rollByLabel(this);">Intimidation</td>
+                        <td onclick="rollByValue(this);" id="stat-intimidation"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td></td>
+                        <td></td>
+                        <td onclick="rollByLabel(this);">Stealth</td>
+                        <td onclick="rollByValue(this);" id="stat-stealth"></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="rollByLabel(this);">Investigation</td>
+                        <td onclick="rollByValue(this);" id="stat-investigation"></td>
+                        <td onclick="rollByLabel(this);">Medicine</td>
+                        <td onclick="rollByValue(this);" id="stat-medicine"></td>
+                        <td onclick="rollByLabel(this);">Performance</td>
+                        <td onclick="rollByValue(this);" id="stat-performance"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="rollByLabel(this);">Nature</td>
+                        <td onclick="rollByValue(this);" id="stat-nature"></td>
+                        <td onclick="rollByLabel(this);">Perception</td>
+                        <td onclick="rollByValue(this);" id="stat-perception"></td>
+                        <td onclick="rollByLabel(this);">Persuasion</td>
+                        <td onclick="rollByValue(this);" id="stat-persuasion"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="rollByLabel(this);">Religion</td>
+                        <td onclick="rollByValue(this);" id="stat-religion"></td>
+                        <td onclick="rollByLabel(this);">Survival</td>
+                        <td onclick="rollByValue(this);" id="stat-survival"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="ship">
+            <div id="ship-data">
+                <div id="ship-conditions"></div>
+                <div id="ship-resources">
+                </div>
+            </div>
+            <div id="ship-name-border">
+                <div id="ship-name">Ship Status</div>
+            </div>
+        </div>
+    </div>
+    <div id="dice-container">
+        <div id="click-blocker" onclick="hideDiceDisplay();" hidden></div>
+        <div id="dice-display" hidden>
+            <p id="roll-calculation"></p>
+            <div id="digit-container">
+                <div class="seven-segment" id="digit-1">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="seven-segment" id="digit-2">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <p id="roll-result"></p>
+        </div>
+    </div>
+</body>
+
+</html>

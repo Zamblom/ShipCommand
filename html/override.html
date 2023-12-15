@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ship Command</title>
+    <link href="main.css" rel="stylesheet">
+    <link href="dice.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
+    <script src="common.js"></script>
+    <script src="override.js"></script>
+    <script src="dice.js"></script>
+</head>
+<body>
+    <div id="battlemap">
+        <div id="map">
+            <div class="deck" id="deck_gun_turret_b" hidden>
+                <div class="room" id="gun_turret_b" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room link" id="hatch_from_gun_turret_b" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+            </div>
+            <div class="deck" id="deck_gun_turret_c" hidden>
+                <div class="room" id="gun_turret_c" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room link" id="hatch_from_gun_turret_c" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+            </div>
+            <div class="deck" id="deck_b" hidden>
+                <div class="room" id="corridor" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="gun_bay_b" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="gun_bay_c" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="gun_bay_d" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room link" id="ladder_to_deck_a" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+            </div>
+            <div class="deck" id="deck_a">
+                <div class="room link" id="ladder_to_deck_b" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="sled_bay" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="engineers_quarter" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="cargo_hold" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="med_bay" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="cockpit" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="brig" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="monitoring" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="living_area" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="mess_hall" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="crew_quarters" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="workshop" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="hallway" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room" id="security" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room link" id="hatch_to_gun_turret_a" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room link" id="hatch_to_sled_a" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+                <div class="room link" id="hatch_to_sled_b" onclick="move_to_room(this.id);" onmouseenter="set_room_information(this.id);" onmouseleave="set_room_information();"></div>
+            </div>
+            <div class="map_button small" id="show_deck_gun_turret_b" onclick="show_deck('deck_gun_turret_b');">G:B</div>
+            <div class="map_button small" id="show_deck_gun_turret_c" onclick="show_deck('deck_gun_turret_c');">G:C</div>
+            <div class="map_button" id="show_deck_b" onclick="show_deck('deck_b');">B</div>
+            <div class="map_button current selected" id="show_deck_a" onclick="show_deck('deck_a');">A</div>
+        </div>
+        <div id="room_information">
+            <div id="room_name"></div>
+            <div id="room_data">
+                <div id="room_description"></div>
+                <div id="room_abilities"></div>
+            </div>
+        </div>
+    </div>
+    <div id="statistics">
+        <div id="player">
+            <div id="player_name">Name</div>
+            <div onclick="set_player_statistics();" id="revert_player" hidden>Back</div>
+            <table id="stats_table" width="100vw">
+                <colgroup>
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                    <col width="12vw">
+                    <col width="4.3vw">
+                </colgroup>
+                <tbody>
+                    <tr class="abilities">
+                        <td onclick="roll_by_label(this);">Strength</td>
+                        <td onclick="roll_by_value(this);" id="stat_strength"></td>
+                        <td onclick="roll_by_label(this);">Dexterity</td>
+                        <td onclick="roll_by_value(this);" id="stat_dexterity"></td>
+                        <td onclick="roll_by_label(this);">Constitution</td>
+                        <td onclick="roll_by_value(this);" id="stat_constitution"></td>
+                        <td onclick="roll_by_label(this);">Intelligence</td>
+                        <td onclick="roll_by_value(this);" id="stat_intelligence"></td>
+                        <td onclick="roll_by_label(this);">Wisdom</td>
+                        <td onclick="roll_by_value(this);" id="stat_wisdom"></td>
+                        <td onclick="roll_by_label(this);">Charisma</td>
+                        <td onclick="roll_by_value(this);" id="stat_charisma"></td>
+                    </tr>
+                    <tr class="saves">
+                        <td onclick="roll_by_label(this);">Saving Throw</td>
+                        <td onclick="roll_by_value(this);" id="stat_strength_save"></td>
+                        <td onclick="roll_by_label(this);">Saving Throw</td>
+                        <td onclick="roll_by_value(this);" id="stat_dexterity_save"></td>
+                        <td onclick="roll_by_label(this);">Saving Throw</td>
+                        <td onclick="roll_by_value(this);" id="stat_constitution_save"></td>
+                        <td onclick="roll_by_label(this);">Saving Throw</td>
+                        <td onclick="roll_by_value(this);" id="stat_intelligence_save"></td>
+                        <td onclick="roll_by_label(this);">Saving Throw</td>
+                        <td onclick="roll_by_value(this);" id="stat_wisdom_save"></td>
+                        <td onclick="roll_by_label(this);">Saving Throw</td>
+                        <td onclick="roll_by_value(this);" id="stat_charisma_save"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td onclick="roll_by_label(this);">Athletics</td>
+                        <td onclick="roll_by_value(this);" id="stat_athletics"></td>
+                        <td onclick="roll_by_label(this);">Acrobatics</td>
+                        <td onclick="roll_by_value(this);" id="stat_acrobatics"></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="roll_by_label(this);">Arcana</td>
+                        <td onclick="roll_by_value(this);" id="stat_arcana"></td>
+                        <td onclick="roll_by_label(this);">Animal Handling</td>
+                        <td onclick="roll_by_value(this);" id="stat_animal_handling"></td>
+                        <td onclick="roll_by_label(this);">Deception</td>
+                        <td onclick="roll_by_value(this);" id="stat_deception"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td></td>
+                        <td></td>
+                        <td onclick="roll_by_label(this);">Sleight Of Hand</td>
+                        <td onclick="roll_by_value(this);" id="stat_sleight_of_hand"></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="roll_by_label(this);">History</td>
+                        <td onclick="roll_by_value(this);" id="stat_history"></td>
+                        <td onclick="roll_by_label(this);">Insight</td>
+                        <td onclick="roll_by_value(this);" id="stat_insight"></td>
+                        <td onclick="roll_by_label(this);">Intimidation</td>
+                        <td onclick="roll_by_value(this);" id="stat_intimidation"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td></td>
+                        <td></td>
+                        <td onclick="roll_by_label(this);">Stealth</td>
+                        <td onclick="roll_by_value(this);" id="stat_stealth"></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="roll_by_label(this);">Investigation</td>
+                        <td onclick="roll_by_value(this);" id="stat_investigation"></td>
+                        <td onclick="roll_by_label(this);">Medicine</td>
+                        <td onclick="roll_by_value(this);" id="stat_medicine"></td>
+                        <td onclick="roll_by_label(this);">Performance</td>
+                        <td onclick="roll_by_value(this);" id="stat_performance"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="roll_by_label(this);">Nature</td>
+                        <td onclick="roll_by_value(this);" id="stat_nature"></td>
+                        <td onclick="roll_by_label(this);">Perception</td>
+                        <td onclick="roll_by_value(this);" id="stat_perception"></td>
+                        <td onclick="roll_by_label(this);">Persuasion</td>
+                        <td onclick="roll_by_value(this);" id="stat_persuasion"></td>
+                    </tr>
+                    <tr class="skills">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td onclick="roll_by_label(this);">Religion</td>
+                        <td onclick="roll_by_value(this);" id="stat_religion"></td>
+                        <td onclick="roll_by_label(this);">Survival</td>
+                        <td onclick="roll_by_value(this);" id="stat_survival"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="ship">
+            <div id="ship_data">
+                <div id="ship_conditions"></div>
+                <div id="ship_resources">
+                </div>
+            </div>
+            <div id="ship_name_border">
+                <div id="ship_name">Ship Status</div>
+            </div>
+        </div>
+    </div>
+    <div id="dice_container">
+        <div id="click_blocker" onclick="hide_dice_display();" hidden></div>
+        <div id="dice_display" hidden>
+            <p id="roll_calculation"></p>
+            <div id="digit_container">
+                <div class="seven_segment" id="digit_1">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="seven_segment" id="digit_2">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <p id="roll_result"></p>
+        </div>
+    </div>
+</body>
+</html>
