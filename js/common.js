@@ -3,9 +3,7 @@ class ShipDeck extends HTMLElement {
         super();
     }
 
-    connectedCallback() {
-        this.name = toCamelCase(this.id);
-    }
+    connectedCallback() {}
 
     select() {
         [...document.getElementsByTagName("ship-deck-selector")].filter((i) => {return i.deck == this;})[0].select();
@@ -20,10 +18,13 @@ class ShipRoom extends HTMLElement {
     }
 
     connectedCallback() {
-        this.name = toCamelCase(this.id);
-        this.deck = this.parentElement;
-        this.addEventListener("click", () => {moveToRoom(this.name)});
+        this.addEventListener("click", () => {moveToRoom(this)});
         this.addEventListener("mouseover", () => {setRoomInformation(this)});
+        this.name = rooms[this.id].name;
+        this.description = rooms[this.id].description;
+        this.center = rooms[this.id].center;
+        this.deck = this.parentElement;
+        this.abilities = rooms[this.id].abilities;
     }
 
     addPlayer(player) {
@@ -59,8 +60,8 @@ class ShipRoom extends HTMLElement {
             newPlayer.id = player;
             newPlayer.classList.add("counter");
             newPlayer.setAttribute("onClick", "javascript: setPlayerStatistics(this.id, event);");
-            newPlayer.style.left = (point.x + rooms[this.name].center.x) + "%";
-            newPlayer.style.top = (point.y + rooms[this.name].center.y) + "%";
+            newPlayer.style.left = (point.x + this.center.x) + "%";
+            newPlayer.style.top = (point.y + this.center.y) + "%";
             this.appendChild(newPlayer);
             i++;
         })
@@ -117,7 +118,7 @@ class ShipDeckSelector extends HTMLElement {
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
             case "deck":
-                this.deck = deckFromName(newValue);
+                this.deck = document.getElementById(newValue);
                 break;
             case "size":
                 this.size = newValue;
@@ -370,14 +371,12 @@ var resources = {
 }
 
 function setRoomInformation(room = currentRoom) {
-    const roomData = rooms[room.name];
-
-    document.getElementById("room-name").innerText = roomData.name + ((room != currentRoom) ? (": Preview") : "");
-    document.getElementById("room-description").innerHTML = roomData.description;
+    document.getElementById("room-name").innerText = room.name + ((room != currentRoom) ? (": Preview") : "");
+    document.getElementById("room-description").innerHTML = room.description;
 
     const roomAbilities = document.getElementById("room-abilities");
     roomAbilities.innerHTML = "";
-    roomData.abilities.forEach((i) => {
+    room.abilities.forEach((i) => {
         const roomAbility = abilities[i];
         const newRoomAbility = document.createElement("div");
         newRoomAbility.classList.add("room-ability");
@@ -476,12 +475,12 @@ function handleNewPlayerLocations(newPlayerLocations) {
 
 function handleNewConnections(newConnections) {
     for (i in rooms) {
-        document.getElementById(toKebabCase(i)).classList.remove("available");
+        if (newConnections.includes(i)) {
+            document.getElementById(i).classList.add("available");
+        } else {
+            document.getElementById(i).classList.remove("available");
+        }
     }
-
-    newConnections.forEach((i) => {
-        document.getElementById(toKebabCase(i)).classList.add("available");
-    });
 }
 
 function handleNewAbilities(newAbilities) {

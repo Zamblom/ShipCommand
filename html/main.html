@@ -16,44 +16,44 @@
 <body>
     <div id="battlemap">
         <div id="map">
-            <ship-deck id="deck-gun-turret-b" hidden>
-                <ship-room id="gun-turret-b"></ship-room>
-                <ship-room id="hatch-from-gun-turret-b" class="link"></ship-room>
+            <ship-deck id="deckGunTurretB">
+                <ship-room id="gunTurretB"></ship-room>
+                <ship-room id="hatchFromGunTurretB" class="link"></ship-room>
             </ship-deck>
-            <ship-deck id="deck-gun-turret-c" hidden>
-                <ship-room id="gun-turret-c"></ship-room>
-                <ship-room id="hatch-from-gun-turret-c" class="link"></ship-room>
+            <ship-deck id="deckGunTurretC">
+                <ship-room id="gunTurretC"></ship-room>
+                <ship-room id="hatchFromGunTurretC" class="link"></ship-room>
             </ship-deck>
-            <ship-deck id="deck-b" hidden>
+            <ship-deck id="deckB">
                 <ship-room id="corridor"></ship-room>
-                <ship-room id="gun-bay-b"></ship-room>
-                <ship-room id="gun-bay-c"></ship-room>
-                <ship-room id="gun-bay-d"></ship-room>
-                <ship-room id="ladder-to-deck-a" class="link"></ship-room>
+                <ship-room id="gunBayB"></ship-room>
+                <ship-room id="gunBayC"></ship-room>
+                <ship-room id="gunBayD"></ship-room>
+                <ship-room id="ladderToDeckA" class="link"></ship-room>
             </ship-deck>
-            <ship-deck id="deck-a">
-                <ship-room id="ladder-to-deck-b"></ship-room>
-                <ship-room id="sled-bay"></ship-room>
-                <ship-room id="engineers-quarter"></ship-room>
-                <ship-room id="cargo-hold"></ship-room>
-                <ship-room id="med-bay"></ship-room>
+            <ship-deck id="deckA">
+                <ship-room id="ladderToDeckB"></ship-room>
+                <ship-room id="sledBay"></ship-room>
+                <ship-room id="engineersQuarter"></ship-room>
+                <ship-room id="cargoHold"></ship-room>
+                <ship-room id="medBay"></ship-room>
                 <ship-room id="cockpit"></ship-room>
                 <ship-room id="brig"></ship-room>
                 <ship-room id="monitoring"></ship-room>
-                <ship-room id="living-area"></ship-room>
-                <ship-room id="mess-hall"></ship-room>
-                <ship-room id="crew-quarters"></ship-room>
+                <ship-room id="livingArea"></ship-room>
+                <ship-room id="messHall"></ship-room>
+                <ship-room id="crewQuarters"></ship-room>
                 <ship-room id="workshop"></ship-room>
                 <ship-room id="hallway"></ship-room>
                 <ship-room id="security"></ship-room>
-                <ship-room id="hatch-to-gun-turret-a" class="link"></ship-room>
-                <ship-room id="hatch-to-sled-a" class="link"></ship-room>
-                <ship-room id="hatch-to-sled-b" class="link"></ship-room>
+                <ship-room id="hatchToGunTurretA" class="link"></ship-room>
+                <ship-room id="hatchToSledA" class="link"></ship-room>
+                <ship-room id="hatchToSledB" class="link"></ship-room>
             </ship-deck>
             <ship-deck-selector style="top: 20%;" deck="deckGunTurretB" size="small">G:B</ship-deck-selector>
             <ship-deck-selector style="top: 30%;" deck="deckGunTurretC" size="small">G:C</ship-deck-selector>
             <ship-deck-selector style="top: 45%;" deck="deckB">B</ship-deck-selector>
-            <ship-deck-selector class="current selected" style="top: 60%;" deck="deckA">A</ship-deck-selector>
+            <ship-deck-selector style="top: 60%;" deck="deckA">A</ship-deck-selector>
         </div>
         <div id="room-information">
             <div id="room-name"></div>

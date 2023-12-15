@@ -4,11 +4,11 @@ var shownRoom;
 function moveToRoom(room) {
     const request = new XMLHttpRequest();
     request.onreadystatechange = () => {handleUpdate(request, "Move To Room")};
-    request.open("GET", "/api/move_to_room?room=" + room);
+    request.open("GET", "/api/move_to_room?room=" + room.id);
     request.send();
 }
 
-function useAbility(ability) {  
+function useAbility(ability) {
     const request = new XMLHttpRequest();
     request.onreadystatechange = () => {handleUpdate(request, "Use Ability")};
     request.open("GET", "/api/use_ability?ability=" + ability)
@@ -32,7 +32,7 @@ window.onload = function() {
 
 function handleNewRoom(newCurrentRoomId) {
     const oldCurrentRoom = currentRoom;
-    const newCurrentRoom = roomFromName(newCurrentRoomId);
+    const newCurrentRoom = document.getElementById(newCurrentRoomId);
     if (currentRoom != newCurrentRoom) {
         currentRoom.classList.remove("current");
         newCurrentRoom.classList.add("current");
