@@ -37,9 +37,7 @@ function handleNewRoom(newCurrentRoomId) {
         newCurrentRoom.deck.select()
         currentRoom = newCurrentRoom;
     }
-    if (oldCurrentRoom != currentRoom || currentRoom == shownRoom) {
-        currentRoom.loadInfo();
-    }
+    if (oldCurrentRoom != currentRoom) {currentRoom.loadInfo();}
 }
 
 function handleNewConnections(newConnections) {
@@ -54,9 +52,10 @@ function handleNewConnections(newConnections) {
 
 function handleNewAbilities(newAbilities) {
     for (i in newAbilities) {
+        const valueChanged = abilities[i].enabled != newAbilities[i].enabled;
         abilities[i].enabled = newAbilities[i].enabled;
+        if (shownRoom.abilities.includes(i) && valueChanged) {shownRoom.loadInfo();}
     }
-    shownRoom.loadInfo();
 }
 
 function handleNewConditions(newConditions) {

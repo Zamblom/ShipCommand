@@ -1,13 +1,6 @@
 var currentRoom;
 var shownRoom;
 
-function moveToRoom(room) {
-    const request = new XMLHttpRequest();
-    request.onreadystatechange = () => {handleUpdate(request, "Move To Room")};
-    request.open("GET", "/api/move_to_room?room=" + room.id);
-    request.send();
-}
-
 function useAbility(ability) {
     const request = new XMLHttpRequest();
     request.onreadystatechange = () => {handleUpdate(request, "Use Ability")};
@@ -28,19 +21,4 @@ window.onload = function() {
     setPlayerStatistics();
     setState();
     setInterval(setState, 1000);
-}
-
-function handleNewRoom(newCurrentRoomId) {
-    const oldCurrentRoom = currentRoom;
-    const newCurrentRoom = document.getElementById(newCurrentRoomId);
-    if (currentRoom != newCurrentRoom) {
-        currentRoom.classList.remove("current");
-        newCurrentRoom.classList.add("current");
-        newCurrentRoom.addPlayer(currentPlayer());
-        newCurrentRoom.deck.select()
-        currentRoom = newCurrentRoom;
-    }
-    if (oldCurrentRoom != currentRoom || currentRoom == shownRoom) {
-        setRoomInformation(currentRoom);
-    }
 }

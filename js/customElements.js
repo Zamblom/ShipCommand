@@ -112,6 +112,16 @@ class ShipDeckSelector extends HTMLElement {
         this.deselect();
     }
 
+    attributeChangedCallback(name, oldValue, newValue) {
+        switch (name) {
+            case "deck":
+                this.deck = document.getElementById(newValue);
+                break;
+            case "size":
+                this.size = newValue;
+        }
+    }
+
     setStyle() {
         this.style.width = "3vw";
         this.style.height = ((this.size == "small") ? (2) : (3)) + "vw";
@@ -143,16 +153,6 @@ class ShipDeckSelector extends HTMLElement {
         this.style.left = "-1%";
         this.style.borderColor = "#F50";
         this.deck.hidden = true;
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        switch (name) {
-            case "deck":
-                this.deck = document.getElementById(newValue);
-                break;
-            case "size":
-                this.size = newValue;
-        }
     }
 }
 customElements.define("ship-deck-selector", ShipDeckSelector);

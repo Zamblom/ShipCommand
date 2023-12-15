@@ -19,6 +19,8 @@ class Application:
             "/dice.css": (self.get_css, ["dice.css"]),
             "/common.js": (self.get_js, ["common.js"]),
             "/helpers.js": (self.get_js, ["helpers.js"]),
+            "/updateHandlers.js": (self.get_js, ["updateHandlers.js"]),
+            "/customElements.js": (self.get_js, ["customElements.js"]),
             "/main.js": (self.get_js, ["main.js"]),
             "/override.js": (self.get_js, ["override.js"]),
             "/dice.js": (self.get_js, ["dice.js"]),
