@@ -1,0 +1,14 @@
+{
+    "evasive": {
+        "name": "Evasive",
+        "active": false
+    },
+    "heatSeeking": {
+        "name": "Heat Seeking",
+        "active": false
+    },
+    "targetLocked": {
+        "name": "Target-Locked",
+        "active": false
+    }
+}

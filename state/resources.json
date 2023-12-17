@@ -1,0 +1,14 @@
+{
+    "fuel": {
+        "name": "Fuel",
+        "color": "#FB1",
+        "amount": 6,
+        "maxAmount": 6
+    },
+    "flares": {
+        "name": "Flares",
+        "color": "#F00",
+        "amount": 5,
+        "maxAmount": 5
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "evasiveManoeuvres": {
+        "name": "Evasive Manoeuvres [R]",
+        "action": "useAbility('evasiveManoeuvres');",
+        "enabled": "NOT(ACTIVE(CONDITION[evasiveManoeuvres])) & GREATER_THAN(RESOURCE[fuel],0)"
+    },
+    "deployFlares": {
+        "name": "Deploy Flares [R]",
+        "action": "useAbility('deployFlares');",
+        "enabled": false
+    },
+    "enterWarp": {
+        "name": "Enter Warp [A]",
+        "action": "useAbility('enterWarp');",
+        "enabled": false
+    },
+    "lockBrigCell": {
+        "name": "Lock Brig Cell [A]",
+        "action": "useAbility('lockBrigCell');",
+        "enabled": false
+    },
+    "unlockBrigCell": {
+        "name": "Unlock Brig Cell [A]",
+        "action": "useAbility('unlockBrigCell');",
+        "enabled": false
+    }
+}
