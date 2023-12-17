@@ -1,27 +1,43 @@
 {
-    "evasiveManoeuvres": {
-        "name": "Evasive Manoeuvres [R]",
-        "action": "useAbility('evasiveManoeuvres');",
-        "enabled": "NOT(ACTIVE(CONDITION[evasiveManoeuvres])) & GREATER_THAN(RESOURCE[fuel],0)"
-    },
     "deployFlares": {
         "name": "Deploy Flares [R]",
-        "action": "useAbility('deployFlares');",
-        "enabled": false
+        "requirements": "AND(ACTIVE(CONDITION[heatSeeking]), GREATER_THAN(AMOUNT(RESOURCE[flares]), INT[0]))",
+        "actions": [
+            "EXPEND(RESOURCE[flares], INT[1])",
+            "DEACTIVATE(CONDITION[heatSeeking])"
+        ]
     },
     "enterWarp": {
         "name": "Enter Warp [A]",
-        "action": "useAbility('enterWarp');",
-        "enabled": false
+        "requirements": "GREATER_THAN(AMOUNT(RESOURCE[fuel]), INT[0])",
+        "actions": [
+            "EXPEND(RESOURCE[fuel], INT[1])"
+        ]
+    },
+    "evasiveManoeuvres": {
+        "name": "Evasive Manoeuvres [R]",
+        "requirements": "AND(ACTIVE(CONDITION[targetLocked]), NOT(ACTIVE(CONDITION[evasive])))",
+        "actions": [
+            "ACTIVATE(CONDITION[evasive])",
+            "DEACTIVATE(CONDITION[targetLocked])"
+        ]
     },
     "lockBrigCell": {
         "name": "Lock Brig Cell [A]",
-        "action": "useAbility('lockBrigCell');",
-        "enabled": false
+        "requirements": "NOT(ACTIVE(CONDITION[brigLocked]))",
+        "actions": [
+            "ACTIVATE(CONDITION[brigLocked])",
+            "REMOVE_CONNECTION(ROOM[monitoring], STRING[brig])",
+            "REMOVE_CONNECTION(ROOM[brig], STRING[monitoring])"
+        ]
     },
     "unlockBrigCell": {
         "name": "Unlock Brig Cell [A]",
-        "action": "useAbility('unlockBrigCell');",
-        "enabled": false
+        "requirements": "ACTIVE(CONDITION[brigLocked])",
+        "actions": [
+            "DEACTIVATE(CONDITION[brigLocked])",
+            "ADD_CONNECTION(ROOM[monitoring], STRING[brig])",
+            "ADD_CONNECTION(ROOM[brig], STRING[monitoring])"
+        ]
     }
 }

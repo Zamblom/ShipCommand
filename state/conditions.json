@@ -1,14 +1,18 @@
 {
+    "brigLocked": {
+        "name": "Brig Locked",
+        "active": false
+    },
     "evasive": {
         "name": "Evasive",
         "active": false
     },
     "heatSeeking": {
         "name": "Heat Seeking",
-        "active": false
+        "active": true
     },
     "targetLocked": {
         "name": "Target-Locked",
-        "active": false
+        "active": true
     }
 }

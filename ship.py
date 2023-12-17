@@ -1,22 +1,109 @@
+from __future__ import annotations
 import typing
 
-import typeguard
+import json
+import re
 
-import quantity
+
+class Ability:
+    def __init__(self, ship: Ship, name: str, requirements: str, actions: list[str]) -> None:
+        self.ship: Ship = ship
+        self.name: str = name
+        self.requirements: str = requirements
+        self.actions: list[str] = actions
+
+        self.enabled: bool = False
+        self.check_requirements()
+
+    def check_requirements(self):
+        self.enabled = self.parse(self.requirements)
+
+    def activate(self):
+        [self.parse(action) for action in self.actions]
+        print(self, self.enabled)
+
+    def parse(self, string: str) -> typing.Any:
+        string = string.lstrip(" ").rstrip(" ")
+
+        if (query := re.search("^\\w+(?=[\\[(])", string)) is None:
+            return string
+
+        operator: str = query.group()
+        parameter_space: str = re.search(f"(?<={operator}[\\[(]).*(?=[])]$)", string).group()
+
+        depth: int = 0
+        parameters: list[typing.Any] = []
+        current_parameter: str = ""
+        for i in parameter_space:
+            if i == "," and depth == 0:
+                parameters.append(self.parse(current_parameter))
+                current_parameter = ""
+            else:
+                if i in "[(":
+                    depth += 1
+                elif i in "])":
+                    depth -= 1
+                if depth < 0:
+                    raise ValueError(f"Invalid Value: \"{string}\"")
+                current_parameter += i
+        parameters.append(self.parse(current_parameter))
+
+        methods: dict[str, typing.Callable] = {
+            "ABILITY": lambda p: self.ship.abilities[p[0]],
+            "ACTIVATE": lambda p: p[0].activate(),
+            "ACTIVE": lambda p: p[0].active,
+            "ADD_CONNECTION": lambda p: p[0].connections.add(p[1]),
+            "AMOUNT": lambda p: p[0].amount,
+            "AND": lambda p: p[0] and p[1],
+            "CONDITION": lambda p: self.ship.conditions[p[0]],
+            "DEACTIVATE": lambda p: p[0].deactivate(),
+            "EXPEND": lambda p: p[0].expend(p[1]),
+            "GREATER_THAN": lambda p: p[0] > p[1],
+            "INT": lambda p: int(p[0]),
+            "NOT": lambda p: not p[0],
+            "REMOVE_CONNECTION": lambda p: p[0].connections.discard(p[1]),
+            "RESOURCE": lambda p: self.ship.resources[p[0]],
+            "ROOM": lambda p: self.ship.rooms[p[0]],
+            "STRING": lambda p: p[0]
+        }
+
+        return methods[operator](parameters)
+
+    def jsonable(self) -> dict[str, str | bool]:
+        return {"name": self.name, "enabled": self.enabled}
+
+
+class Condition:
+    def __init__(self, name: str, active: bool) -> None:
+        self.name: str = name
+        self.active: bool = active
+
+    def activate(self):
+        self.active = True
+
+    def deactivate(self):
+        self.active = False
+
+
+class Resource:
+    def __init__(self, name: str, amount: int, max_amount: int) -> None:
+        self.name: str = name
+        self.amount: int = amount
+        self.max_amount: int = max_amount
+
+    def expend(self, amount: int):
+        self.amount = max(0, self.amount - amount)
 
 
 class Room:
-    @typeguard.typechecked
-    def __init__(self, connections: typing.Optional[list[str]] = None, abilities: typing.Optional[list[str]] = None, link: str = "") -> None:
-        connections = [] if connections is None else connections
+    def __init__(self, connections: set, abilities: typing.Optional[list[str]] = None, link: str = "") -> None:
         abilities = [] if abilities is None else abilities
 
-        self.connections: list[str] = connections
+        self.connections: set[str] = connections
         self.abilities: list[str] = abilities
         self.link: str = link
         self.players: list[str] = []
 
-    @typeguard.typechecked
     def add_player(self, player: str) -> bool:
         if player in self.players:
             return False
@@ -24,7 +111,6 @@ class Room:
         self.players.append(player)
         return True
 
-    @typeguard.typechecked
     def remove_player(self, player: str) -> bool:
         if player not in self.players:
             return False
@@ -32,67 +118,56 @@ class Room:
         self.players.remove(player)
         return True
 
-    @typeguard.typechecked
     def has_players(self) -> bool:
         return len(self.players) > 0
 
-    @typeguard.typechecked
     def has_link(self) -> bool:
         return self.link != ""
 
 
 class Ship:
-    @typeguard.typechecked
-    def __init__(self) -> None:
+    def __init__(self, abilities_file: str, conditions_file: str, resources_file: str) -> None:
+        self.abilities_file: str = abilities_file
+        self.conditions_file: str = conditions_file
+        self.resources_file: str = resources_file
+
         self.rooms: dict[str, Room] = {
-            "gunTurretB": Room(connections=["hatchFromGunTurretB"]),
-            "hatchFromGunTurretB": Room(link="corridor"),
-            "gunTurretC": Room(connections=["hatchFromGunTurretC"]),
-            "hatchFromGunTurretC": Room(link="corridor"),
-            "corridor": Room(connections=["ladderToDeckA", "gunBayB", "gunBayC", "gunBayD"]),
-            "gunBayC": Room(link="gunTurretB"),
-            "gunBayB": Room(link="gunTurretB"),
-            "gunBayD": Room(connections=["corridor"]),
-            "ladderToDeckA": Room(link="hallway"),
-            "sledBay": Room(connections=["hallway", "hatchToSledA", "hatchToSledB"]),
-            "engineersQuarter": Room(connections=["hallway", "cargoHold"]),
-            "cargoHold": Room(connections=["hallway", "engineersQuarter"]),
-            "medBay": Room(connections=["hallway"]),
-            "cockpit": Room(connections=["security"], abilities=["evasiveManoeuvres", "deployFlares", "enterWarp"]),
-            "brig": Room(connections=["monitoring"]),
-            "monitoring": Room(connections=["hallway", "brig"], abilities=["lockBrigCell", "unlockBrigCell"]),
-            "livingArea": Room(connections=["hallway", "workshop", "messHall", "crewQuarters"]),
-            "messHall": Room(connections=["livingArea"]),
-            "crewQuarters": Room(connections=["livingArea"]),
-            "workshop": Room(connections=["hallway", "livingArea"]),
-            "hallway": Room(connections=["sledBay", "engineersQuarter", "cargoHold", "medBay", "security", "monitoring", "livingArea", "workshop", "ladderToDeckB", "hatchToGunTurretA"]),
-            "security": Room(connections=["hallway", "cockpit"]),
-            "ladderToDeckB": Room(link="corridor"),
-            "hatchToGunTurretA": Room(link="hallway"),
-            "hatchToSledA": Room(link="hallway"),
-            "hatchToSledB": Room(link="hallway"),
+            "gunTurretB": Room({"hatchFromGunTurretB"}),
+            "hatchFromGunTurretB": Room(set(), link="corridor"),
+            "gunTurretC": Room({"hatchFromGunTurretC"}),
+            "hatchFromGunTurretC": Room(set(), link="corridor"),
+            "corridor": Room({"ladderToDeckA", "gunBayB", "gunBayC", "gunBayD"}),
+            "gunBayC": Room(set(), link="gunTurretB"),
+            "gunBayB": Room(set(), link="gunTurretB"),
+            "gunBayD": Room({"corridor"}),
+            "ladderToDeckA": Room(set(), link="hallway"),
+            "sledBay": Room({"hallway", "hatchToSledA", "hatchToSledB"}),
+            "engineersQuarter": Room({"hallway", "cargoHold"}),
+            "cargoHold": Room({"hallway", "engineersQuarter"}),
+            "medBay": Room({"hallway"}),
+            "cockpit": Room({"security"}, abilities=["evasiveManoeuvres", "deployFlares", "enterWarp"]),
+            "brig": Room({"monitoring"}),
+            "monitoring": Room({"hallway", "brig"}, abilities=["lockBrigCell", "unlockBrigCell"]),
+            "livingArea": Room({"hallway", "workshop", "messHall", "crewQuarters"}),
+            "messHall": Room({"livingArea"}),
+            "crewQuarters": Room({"livingArea"}),
+            "workshop": Room({"hallway", "livingArea"}),
+            "hallway": Room({"sledBay", "engineersQuarter", "cargoHold", "medBay", "security", "monitoring", "livingArea", "workshop", "ladderToDeckB", "hatchToGunTurretA"}),
+            "security": Room({"hallway", "cockpit"}),
+            "ladderToDeckB": Room(set(), link="corridor"),
+            "hatchToGunTurretA": Room(set(), link="hallway"),
+            "hatchToSledA": Room(set(), link="hallway"),
+            "hatchToSledB": Room(set(), link="hallway"),
         }
 
-        self.abilities: dict[str, bool] = {
-            "evasiveManoeuvres": True,
-            "deployFlares": True,
-            "enterWarp": True,
-            "lockBrigCell": True,
-            "unlockBrigCell": False
-        }
+        self.abilities: dict[str: Ability] = {}
+        self.conditions: dict[str: Condition] = {}
+        self.resources: dict[str: Resource] = {}
 
-        self.conditions: dict[str, bool] = {
-            "evasive": False,
-            "heatSeeking": True,
-            "targetLocked": True,
-        }
+        self.load_conditions()
+        self.load_resources()
+        self.load_abilities()
 
-        self.resources: dict[str, quantity.Quantity] = {
-            "fuel": quantity.Quantity(6, 6),
-            "flares": quantity.Quantity(5, 5)
-        }
-
-    @typeguard.typechecked
     def move_player_to_room(self, player: str, new_room: str) -> bool:
         current_room: str = self.get_room_by_player(player)
 
@@ -112,106 +187,50 @@ class Ship:
 
         return True
 
-    @typeguard.typechecked
     def get_room_by_player(self, player: str) -> str:
         for room_name, room in self.rooms.items():
             if player in room.players:
                 return room_name
 
-    @typeguard.typechecked
     def get_connections_by_player(self, player: str) -> list[str]:
-        return self.rooms[self.get_room_by_player(player)].connections
+        return list(self.rooms[self.get_room_by_player(player)].connections)
 
-    @typeguard.typechecked
     def validate_abilities(self) -> None:
-        self.abilities["deployFlares"] = not self.resources["flares"].is_empty()
-        self.abilities["enterWarp"] = not self.resources["fuel"].is_empty()
+        for ability in self.abilities.values():
+            ability.check_requirements()
 
-    @typeguard.typechecked
-    def use_ability(self, player: str, ability: str) -> bool:
-        if not self.abilities[ability]:
-            return False
-
-        current_room: str = self.get_room_by_player(player)
-
-        match ability:
-            case "evasiveManoeuvres":
-                # Set condition[target_locked], Clear condition[target_locked]
-                if current_room not in ["cockpit"]:
-                    return False
-
-                self.conditions["evasive"] = True
-                self.conditions["targetLocked"] = False
-
-                self.abilities["evasiveManoeuvres"] = False
-
-            case "enterWarp":
-                # Expend 1 resource[fuel], Set condition[enter_warp]
-                if current_room not in ["cockpit"]:
-                    return False
-
-                if not self.resources["fuel"].expend(1):
-                    return False
-
-            case "deployFlares":
-                # Expend 1 resource[flare], Clear condition[heat_seeking]
-                if current_room not in ["cockpit"]:
-                    return False
-
-                if not self.resources["flares"].expend(1):
-                    return False
-
-                self.conditions["heatSeeking"] = False
-
-            case "lockBrigCell":
-                # Remove connection[monitoring -> brig], Remove connection[brig -> monitoring]
-                if current_room not in ["monitoring"]:
-                    return False
-
-                if "brig" not in self.rooms["monitoring"].connections:
-                    return False
-
-                if "monitoring" not in self.rooms["brig"].connections:
-                    return False
-
-                self.rooms["monitoring"].connections = ["hallway"]
-                self.rooms["brig"].connections = []
-
-                self.abilities["lockBrigCell"] = False
-                self.abilities["unlockBrigCell"] = True
-
-            case "unlockBrigCell":
-                # Add connection[monitoring -> brig], Add connection[brig -> monitoring]
-                if current_room not in ["monitoring"]:
-                    return False
-
-                if "brig" in self.rooms["monitoring"].connections:
-                    return False
-
-                if "monitoring" in self.rooms["brig"].connections:
-                    return False
-
-                self.rooms["monitoring"].connections = ["hallway", "brig"]
-                self.rooms["brig"].connections = ["monitoring"]
-
-                self.abilities["unlockBrigCell"] = False
-                self.abilities["lockBrigCell"] = True
-
+    def use_ability(self, player: str, ability: str) -> None:
+        # TODO: Check if Ability accessible from same Room as Player
+        if self.abilities[ability].enabled:
+            self.abilities[ability].activate()
         self.validate_abilities()
-        return True
 
-    @typeguard.typechecked
     def get_rooms_with_players(self) -> dict[str, list[str]]:
         return {room_name: room.players for room_name, room in self.rooms.items() if room.has_players()}
 
-    @typeguard.typechecked
-    def get_abilities(self) -> dict[str, dict[str, bool]]:
-        return {ability: {"enabled": enabled} for ability, enabled in self.abilities.items()}
+    def get_abilities(self) -> dict[str, dict[str, str | bool]]:
+        return {name: data.jsonable() for name, data in self.abilities.items()}
 
-    @typeguard.typechecked
     def get_conditions(self) -> dict[str, dict[str, bool]]:
-        return {condition: {"active": active} for condition, active in self.conditions.items()}
+        return {name: {"active": data.active} for name, data in self.conditions.items()}
 
-    @typeguard.typechecked
     def get_resources(self) -> dict[str, dict[str, int]]:
-        return {resource_name: {"amount": resource.amount, "maxAmount": resource.max_amount} for resource_name, resource in self.resources.items()}
+        return {name: {"amount": data.amount, "maxAmount": data.max_amount} for name, data in self.resources.items()}
+
+    def load_abilities(self):
+        with open(self.abilities_file, "r") as file:
+            json_abilities: str = file.read()
+        for name, data in json.loads(json_abilities).items():
+            self.abilities[name] = Ability(self, data["name"], data["requirements"], data["actions"])
+
+    def load_conditions(self):
+        with open(self.conditions_file, "r") as file:
+            json_conditions: str = file.read()
+        for name, data in json.loads(json_conditions).items():
+            self.conditions[name] = Condition(data["name"], data["active"])
+
+    def load_resources(self):
+        with open(self.resources_file, "r") as file:
+            json_resources: str = file.read()
+        for name, data in json.loads(json_resources).items():
+            self.resources[name] = Resource(data["name"], data["amount"], data["maxAmount"])

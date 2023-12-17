@@ -5,12 +5,12 @@ function handleUpdate(request, caller) {
                 case 200:
                     const response = JSON.parse(request.responseText);                
                     if ("roomsWithPlayers" in response) {handleNewPlayerLocations(response.roomsWithPlayers);}
-                    if ("currentRoom" in response) {handleNewRoom(response.currentRoom);}
                     if ("connections" in response) {handleNewConnections(response.connections);}
                     if ("abilities" in response) {handleNewAbilities(response.abilities);}
                     if ("conditions" in response) {handleNewConditions(response.conditions);}
                     if ("resources" in response) {handleNewResources(response.resources);}
                     if ("playerData" in response) {handleNewPlayerData(response.playerData);}
+                    if ("currentRoom" in response) {handleNewRoom(response.currentRoom);}
                     break;
                 default:
                     console.log("FAILED: " + caller + " - " + request.status);
@@ -30,14 +30,14 @@ function handleNewPlayerLocations(newPlayerLocations) {
 function handleNewRoom(newCurrentRoomId) {
     const oldCurrentRoom = currentRoom;
     const newCurrentRoom = document.getElementById(newCurrentRoomId);
-    if (currentRoom != newCurrentRoom) {
-        currentRoom.classList.remove("current");
+    if (currentRoom !== newCurrentRoom) {
+        if (currentRoom !== undefined) {currentRoom.classList.remove("current")}
         newCurrentRoom.classList.add("current");
         newCurrentRoom.addPlayer(currentPlayer());
         newCurrentRoom.deck.select()
         currentRoom = newCurrentRoom;
     }
-    if (oldCurrentRoom != currentRoom) {currentRoom.loadInfo();}
+    if (oldCurrentRoom !== currentRoom) {currentRoom.loadInfo()}
 }
 
 function handleNewConnections(newConnections) {
@@ -52,9 +52,11 @@ function handleNewConnections(newConnections) {
 
 function handleNewAbilities(newAbilities) {
     for (i in newAbilities) {
-        const valueChanged = abilities[i].enabled != newAbilities[i].enabled;
+        if (!(i in abilities)) {abilities[i] = {}}
+        const valueChanged = abilities[i].name !== newAbilities[i].name || abilities[i].enabled !== newAbilities[i].enabled;
+        abilities[i].name = newAbilities[i].name;
         abilities[i].enabled = newAbilities[i].enabled;
-        if (shownRoom.abilities.includes(i) && valueChanged) {shownRoom.loadInfo();}
+        if (shownRoom !== undefined && shownRoom.abilities.includes(i) && valueChanged) {shownRoom.loadInfo();}
     }
 }
 
@@ -75,7 +77,7 @@ function handleNewResources(newResources) {
 
 function handleNewPlayerData(newPlayerData) {
     document.getElementById("player-name").innerText = newPlayerData.name;
-    document.getElementById("revert-player").hidden = newPlayerData.id == currentPlayer();
+    document.getElementById("revert-player").hidden = newPlayerData.id === currentPlayer();
     for (i in newPlayerData.stats) {
         statFromName(i).innerText = newPlayerData.stats[i];
     }

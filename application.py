@@ -4,7 +4,10 @@ import typing
 import json
 import typeguard
 
+typeguard.install_import_hook("player")
 import player
+
+typeguard.install_import_hook("ship")
 import ship
 
 
@@ -44,7 +47,7 @@ class Application:
             os.path.isfile(f"players/{file}")
         }
 
-        self.ship: ship.Ship = ship.Ship()
+        self.ship: ship.Ship = ship.Ship("state/abilities.json", "state/conditions.json", "state/resources.json")
 
         for person in self.players:
             self.ship.rooms["cockpit"].add_player(person)

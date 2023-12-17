@@ -12,13 +12,12 @@ document.onkeypress = function (e) {
     e = e || window.event;
     if (e.keyCode >= 49 && e.keyCode <= 57) {
         const abilityElement = document.getElementsByClassName("room-ability")[e.keyCode - 49];
-        if (abilityElement != undefined) {abilityElement.click();}
+        if (abilityElement !== undefined) {abilityElement.click();}
     }
 };
 
 window.onload = function() {
-    currentRoom = document.getElementsByTagName("ship-room")[0];
-    setPlayerStatistics();
     setState();
+    setPlayerStatistics();
     setInterval(setState, 1000);
 }

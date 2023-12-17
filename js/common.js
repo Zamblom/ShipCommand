@@ -183,35 +183,13 @@ var rooms = {
     }
 }
 
-var abilities = {
-    evasiveManoeuvres: {
-        name: "Evasive Manoeuvres [R]",
-        action: "useAbility('evasiveManoeuvres');",
-        enabled: false
-    },
-    deployFlares: {
-        name: "Deploy Flares [R]",
-        action: "useAbility('deployFlares');",
-        enabled: false
-    },
-    enterWarp: {
-        name: "Enter Warp [A]",
-        action: "useAbility('enterWarp');",
-        enabled: false
-    },
-    lockBrigCell: {
-        name: "Lock Brig Cell [A]",
-        action: "useAbility('lockBrigCell');",
-        enabled: false
-    },
-    unlockBrigCell: {
-        name: "Unlock Brig Cell [A]",
-        action: "useAbility('unlockBrigCell');",
-        enabled: false
-    }
-}
+var abilities = {}
 
 var conditions = {
+    brigLocked: {
+        name: "Brig Locked",
+        active: false
+    },
     evasive: {
         name: "Evasive",
         active: false
@@ -278,10 +256,10 @@ function setResources() {
 }
 
 function setPlayerStatistics(player, event) {
-    if (event != undefined) {event.stopPropagation();}
+    if (event !== undefined) {event.stopPropagation();}
     const request = new XMLHttpRequest();
     request.onreadystatechange = () => {handleUpdate(request, "Set Player Statistics");};
-    request.open("GET", "/api/player_statistics" + ((player != undefined) ? ("?player=" + player) : ("")));
+    request.open("GET", "/api/player_statistics" + ((player !== undefined) ? ("?player=" + player) : ("")));
     request.send();
 }
 
@@ -289,5 +267,5 @@ function setState() {
     const request = new XMLHttpRequest();
     request.onreadystatechange = () => {handleUpdate(request, "Set State")};
     request.open("GET", "/api/state");
-    request.send();    
+    request.send();
 }

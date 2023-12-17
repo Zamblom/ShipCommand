@@ -6,7 +6,7 @@ class ShipDeck extends HTMLElement {
     connectedCallback() {}
 
     select() {
-        [...document.getElementsByTagName("ship-deck-selector")].filter((i) => {return i.deck == this;})[0].select();
+        [...document.getElementsByTagName("ship-deck-selector")].filter((i) => {return i.deck === this;})[0].select();
     }
 }
 customElements.define("ship-deck", ShipDeck);
@@ -74,8 +74,9 @@ class ShipRoom extends HTMLElement {
         request.send();
     }
 
-    loadInfo() {
-        document.getElementById("room-name").innerText = this.name + ((this != currentRoom) ? (": Preview") : "");
+    loadInfo(event) {
+        if (event !== undefined) {event.stopPropagation()}
+        document.getElementById("room-name").innerText = this.name + ((this !== currentRoom) ? (": Preview") : "");
         document.getElementById("room-description").innerHTML = this.description;
     
         const roomAbilities = document.getElementById("room-abilities");
@@ -86,8 +87,8 @@ class ShipRoom extends HTMLElement {
             newRoomAbility.classList.add("room-ability");
             if (abilities[i].enabled) {
                 newRoomAbility.classList.add("active");
-                if (this == currentRoom) {
-                    newRoomAbility.setAttribute("onClick", "javascript: " + roomAbility.action);
+                if (this === currentRoom) {
+                    newRoomAbility.setAttribute("onClick", "javascript: useAbility(\"" + i + "\")");
                 }
             }
             newRoomAbility.innerText = roomAbility.name;
@@ -124,9 +125,9 @@ class ShipDeckSelector extends HTMLElement {
 
     setStyle() {
         this.style.width = "3vw";
-        this.style.height = ((this.size == "small") ? (2) : (3)) + "vw";
+        this.style.height = ((this.size === "small") ? (2) : (3)) + "vw";
 
-        this.style.paddingRight = ((this.size == "small") ? (0.2) : (0.6)) + "vw";
+        this.style.paddingRight = ((this.size === "small") ? (0.2) : (0.6)) + "vw";
 
         this.style.backgroundColor = "#DDD";
 
@@ -134,7 +135,7 @@ class ShipDeckSelector extends HTMLElement {
         this.style.borderStyle = "solid";
         this.style.borderRadius = "0 0.5vw 0.5vw 0";
 
-        this.style.fontSize = ((this.size == "small") ? (1) : (1.8)) + "vw";
+        this.style.fontSize = ((this.size === "small") ? (1) : (1.8)) + "vw";
         this.style.fontWeight = "bold";
 
         this.style.textAlign = "right";
