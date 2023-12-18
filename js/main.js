@@ -19,5 +19,5 @@ document.onkeypress = function (e) {
 window.onload = function() {
     setState();
     setPlayerStatistics();
-    setInterval(setState, 1000);
+    setInterval(setState, 5000);
 }

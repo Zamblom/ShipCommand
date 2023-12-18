@@ -27,15 +27,22 @@ class Timed:
         return self.value
 
     def set(self, value):
-        self.set_time()
-        self.value = value
+        if value != self.value:
+            self.value = value
+            self.set_time()
 
     def __getitem__(self, indices):
         return self.value.__getitem__(indices)
 
     def __setitem__(self, key, value):
+        try:
+            if self.value.__getitem__(key) == value:
+                return
+        except KeyError:
+            pass
         self.value.__setitem__(key, value)
         self.set_time()
+
     def __repr__(self):
         return str(self)
 
