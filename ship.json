@@ -1,0 +1,641 @@
+{
+    "abilities": {
+        "deployFlares": {
+            "actions": [
+                "DEACTIVATE(CONDITION[heatSeeking])",
+                "EXPEND(RESOURCE[flares], INT[1])"
+            ],
+            "enabled": false,
+            "name": "Deploy Flares [R]",
+            "requirement": "AND(ACTIVE(CONDITION[heatSeeking]), GREATER_THAN(AMOUNT(RESOURCE[flares]), INT[0]))"
+        },
+        "enterWarp": {
+            "actions": [
+                "EXPEND(RESOURCE[fuel], INT[1])"
+            ],
+            "enabled": false,
+            "name": "Enter Warp [A]",
+            "requirement": "GREATER_THAN(AMOUNT(RESOURCE[fuel]), INT[0])"
+        },
+        "evasiveManoeuvres": {
+            "actions": [
+                "ACTIVATE(CONDITION[evasive])",
+                "DEACTIVATE(CONDITION[targetLocked])"
+            ],
+            "enabled": false,
+            "name": "Evasive Manoeuvres [R]",
+            "requirement": "AND(ACTIVE(CONDITION[targetLocked]), NOT(ACTIVE(CONDITION[evasive])))"
+        },
+        "lockBrigCell": {
+            "actions": [
+                "ACTIVATE(CONDITION[brigLocked])",
+                "REMOVE_CONNECTION(ROOM[deckA, brig], STRING[deckA], STRING[monitoring])",
+                "REMOVE_CONNECTION(ROOM[deckA, monitoring], STRING[deckA], STRING[brig])"
+            ],
+            "enabled": false,
+            "name": "Lock Brig Cell [A]",
+            "requirement": "NOT(ACTIVE(CONDITION[brigLocked]))"
+        },
+        "unlockBrigCell": {
+            "actions": [
+                "ADD_CONNECTION(ROOM[deckA, brig], STRING[deckA], STRING[monitoring])",
+                "ADD_CONNECTION(ROOM[deckA, monitoring], STRING[deckA], STRING[brig])",
+                "DEACTIVATE(CONDITION[brigLocked])"
+            ],
+            "enabled": false,
+            "name": "Unlock Brig Cell [A]",
+            "requirement": "ACTIVE(CONDITION[brigLocked])"
+        }
+    },
+    "conditions": {
+        "brigLocked": {
+            "active": false,
+            "name": "Brig Locked"
+        },
+        "evasive": {
+            "active": false,
+            "name": "Evasive"
+        },
+        "heatSeeking": {
+            "active": true,
+            "name": "Heat Seeking"
+        },
+        "targetLocked": {
+            "active": true,
+            "name": "Target-Locked"
+        }
+    },
+    "decks": {
+        "deckA": {
+            "name": "Deck A",
+            "rooms": {
+                "brig": {
+                    "abilities": [],
+                    "center": {
+                        "x": 69,
+                        "y": 66
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "monitoring"
+                        ]
+                    ],
+                    "description": "An isolated prison cell.<br><br>Bars built into the walls of the ship acts as hard-points for a wide variety of restraints.",
+                    "isLink": false,
+                    "name": "Brig",
+                    "players": []
+                },
+                "cargoHold": {
+                    "abilities": [],
+                    "center": {
+                        "x": 48,
+                        "y": 21
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "engineersQuarter"
+                        ],
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "Various crates fill the front left quarter of the ship.<br><br>Inside them: all of the supplies needed for the arduous task that is space travel.",
+                    "isLink": false,
+                    "name": "Cargo Hold",
+                    "players": []
+                },
+                "cockpit": {
+                    "abilities": [
+                        "deployFlares",
+                        "enterWarp",
+                        "evasiveManoeuvres"
+                    ],
+                    "center": {
+                        "x": 84,
+                        "y": 50
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "security"
+                        ]
+                    ],
+                    "description": "The main command center of the ship.<br><br>All of the tools needed to pilot a modern space-faring vessel can be found here, plugged into consoles and jammed into wall spaces.",
+                    "isLink": false,
+                    "name": "Cockpit",
+                    "players": []
+                },
+                "crewQuarters": {
+                    "abilities": [],
+                    "center": {
+                        "x": 25,
+                        "y": 86
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "livingArea"
+                        ]
+                    ],
+                    "description": "Several beds stand near each other, each fitted like tetris pieces into one of the smallest rooms in the ship.<br><br>Only just suitable for sleep, the crew are unlikely to spend any unnecessary time within these walls.",
+                    "isLink": false,
+                    "name": "Crew Quarters",
+                    "players": []
+                },
+                "engineersQuarter": {
+                    "abilities": [],
+                    "center": {
+                        "x": 25,
+                        "y": 21
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "cargoHold"
+                        ],
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "Piles of tools lie strewn across several large workbenches.<br><br>Several large sheets of metal stand by the door, ready to be used to patch hull and bulkhead alike.",
+                    "isLink": false,
+                    "name": "Engineer's Quarter",
+                    "players": []
+                },
+                "hallway": {
+                    "abilities": [],
+                    "center": {
+                        "x": 53,
+                        "y": 50
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "cargoHold"
+                        ],
+                        [
+                            "deckA",
+                            "engineersQuarter"
+                        ],
+                        [
+                            "deckA",
+                            "hatchToGunTurretA"
+                        ],
+                        [
+                            "deckA",
+                            "ladderToDeckB"
+                        ],
+                        [
+                            "deckA",
+                            "livingArea"
+                        ],
+                        [
+                            "deckA",
+                            "medBay"
+                        ],
+                        [
+                            "deckA",
+                            "monitoring"
+                        ],
+                        [
+                            "deckA",
+                            "security"
+                        ],
+                        [
+                            "deckA",
+                            "sledBay"
+                        ],
+                        [
+                            "deckA",
+                            "workshop"
+                        ]
+                    ],
+                    "description": "A single hallway linking together almost all of the ships major rooms.",
+                    "isLink": false,
+                    "name": "Hallway",
+                    "players": []
+                },
+                "hatchToGunTurretA": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "A hatch leading downwards to Gun Turret A and the main airlock.",
+                    "isLink": true,
+                    "name": "Hatch To Gun Turret A",
+                    "players": []
+                },
+                "hatchToSledA": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "A hatch leading outwards to Sled A.",
+                    "isLink": true,
+                    "name": "Hatch To Sled A",
+                    "players": []
+                },
+                "hatchToSledB": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "A hatch leading outwards to Sled B.",
+                    "isLink": true,
+                    "name": "Hatch To Sled B",
+                    "players": []
+                },
+                "ladderToDeckB": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "deckB",
+                            "corridor"
+                        ]
+                    ],
+                    "description": "A ladder leading upwards to Deck B.",
+                    "isLink": true,
+                    "name": "Ladder To Deck B",
+                    "players": []
+                },
+                "livingArea": {
+                    "abilities": [],
+                    "center": {
+                        "x": 37,
+                        "y": 68
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "crewQuarters"
+                        ],
+                        [
+                            "deckA",
+                            "hallway"
+                        ],
+                        [
+                            "deckA",
+                            "messHall"
+                        ],
+                        [
+                            "deckA",
+                            "workshop"
+                        ]
+                    ],
+                    "description": "The friendliest room of the ship.<br><br>Harsh metal walls give way to lighter custom paintwork and a couple of tables sit covered in equipment and the odd boardgame.",
+                    "isLink": false,
+                    "name": "Living Area",
+                    "players": []
+                },
+                "medBay": {
+                    "abilities": [],
+                    "center": {
+                        "x": 64,
+                        "y": 37
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "Should any crew member sustain a serious injury, the med-bay offers a single room to house all of the various medicines and equipments used to restore them to health.",
+                    "isLink": false,
+                    "name": "Med-Bay",
+                    "players": []
+                },
+                "messHall": {
+                    "abilities": [],
+                    "center": {
+                        "x": 47,
+                        "y": 86
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "livingArea"
+                        ]
+                    ],
+                    "description": "Wall mounted shelves host the assorted collection of crew rations and a lone counter tops acts as the sole place clean enough to prepare food.",
+                    "isLink": false,
+                    "name": "Mess Hall",
+                    "players": []
+                },
+                "monitoring": {
+                    "abilities": [
+                        "lockBrigCell",
+                        "unlockBrigCell"
+                    ],
+                    "center": {
+                        "x": 56,
+                        "y": 61
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "brig"
+                        ],
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "A room filled with consoles and tools fit to monitor even the most unusual of criminal scum.",
+                    "isLink": false,
+                    "name": "Monitoring",
+                    "players": []
+                },
+                "security": {
+                    "abilities": [],
+                    "center": {
+                        "x": 69,
+                        "y": 50
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "cockpit"
+                        ],
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "A hardened security room sits firmly in between the cockpit and the rest of the ship.<br><br>In the event of intrusion, two large doors form an impassible barrier to protect the pilot and crew.",
+                    "isLink": false,
+                    "name": "Security",
+                    "players": []
+                },
+                "sledBay": {
+                    "abilities": [],
+                    "center": {
+                        "x": 12,
+                        "y": 41
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "hallway"
+                        ],
+                        [
+                            "deckA",
+                            "hatchToSledA"
+                        ],
+                        [
+                            "deckA",
+                            "hatchToSledB"
+                        ]
+                    ],
+                    "description": "A room equipped with two sleds, each capable of boarding an enemy ship, provided that they survive the perilous journey to its hull.",
+                    "isLink": false,
+                    "name": "Sled Bay",
+                    "players": []
+                },
+                "workshop": {
+                    "abilities": [],
+                    "center": {
+                        "x": 12,
+                        "y": 59
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "hallway"
+                        ],
+                        [
+                            "deckA",
+                            "livingArea"
+                        ]
+                    ],
+                    "description": "A variety of machine and hand tools clutter shelves and tables.<br><br>For any craft that can't be achieved by hand, this room is the first place to look.",
+                    "isLink": false,
+                    "name": "Workshop",
+                    "players": []
+                }
+            }
+        },
+        "deckB": {
+            "name": "Deck B",
+            "rooms": {
+                "corridor": {
+                    "abilities": [],
+                    "center": {
+                        "x": 36,
+                        "y": 50
+                    },
+                    "connections": [
+                        [
+                            "deckB",
+                            "gunBayB"
+                        ],
+                        [
+                            "deckB",
+                            "gunBayC"
+                        ],
+                        [
+                            "deckB",
+                            "gunBayD"
+                        ],
+                        [
+                            "deckB",
+                            "ladderToDeckA"
+                        ]
+                    ],
+                    "description": "A corridor allowing passage between the main hallway and upper gun bays.",
+                    "isLink": false,
+                    "name": "Corridor",
+                    "players": []
+                },
+                "gunBayB": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "gunDeckB",
+                            "gunTurretB"
+                        ]
+                    ],
+                    "description": "A gun bay containing Gun Turret B.",
+                    "isLink": true,
+                    "name": "Gun Bay B",
+                    "players": []
+                },
+                "gunBayC": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "gunDeckC",
+                            "gunTurretC"
+                        ]
+                    ],
+                    "description": "A gun bay containing Gun Turret C.",
+                    "isLink": true,
+                    "name": "Gun Bay C",
+                    "players": []
+                },
+                "gunBayD": {
+                    "abilities": [],
+                    "center": {
+                        "x": 59.8,
+                        "y": 50
+                    },
+                    "connections": [
+                        [
+                            "deckB",
+                            "corridor"
+                        ]
+                    ],
+                    "description": "A empty gun bay fit for a WMD.",
+                    "isLink": false,
+                    "name": "Gun Bay D",
+                    "players": []
+                },
+                "ladderToDeckA": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "deckA",
+                            "hallway"
+                        ]
+                    ],
+                    "description": "A ladder leading downwards to Deck A.",
+                    "isLink": true,
+                    "name": "Ladder To Deck A",
+                    "players": []
+                }
+            }
+        },
+        "gunDeckB": {
+            "name": "Gun Deck B",
+            "rooms": {
+                "gunTurretB": {
+                    "abilities": [],
+                    "center": {
+                        "x": 50,
+                        "y": 50
+                    },
+                    "connections": [
+                        [
+                            "gunDeckC",
+                            "hatchFromGunTurretB"
+                        ]
+                    ],
+                    "description": "The second of the primary gun turrets.",
+                    "isLink": false,
+                    "name": "Gun Turret B",
+                    "players": []
+                },
+                "hatchFromGunTurretB": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "deckB",
+                            "corridor"
+                        ]
+                    ],
+                    "description": "A hatch leading downward to Deck B.",
+                    "isLink": true,
+                    "name": "Hatch to Deck B",
+                    "players": []
+                }
+            }
+        },
+        "gunDeckC": {
+            "name": "Gun Deck C",
+            "rooms": {
+                "gunTurretC": {
+                    "abilities": [],
+                    "center": {
+                        "x": 50,
+                        "y": 50
+                    },
+                    "connections": [
+                        [
+                            "gunDeckC",
+                            "hatchFromGunTurretC"
+                        ]
+                    ],
+                    "description": "The third of the primary gun turrets.",
+                    "isLink": false,
+                    "name": "Gun Turret C",
+                    "players": []
+                },
+                "hatchFromGunTurretC": {
+                    "abilities": [],
+                    "center": {
+                        "x": 0,
+                        "y": 0
+                    },
+                    "connections": [
+                        [
+                            "deckB",
+                            "corridor"
+                        ]
+                    ],
+                    "description": "A hatch leading downward to Deck B.",
+                    "isLink": true,
+                    "name": "Hatch to Deck B",
+                    "players": []
+                }
+            }
+        }
+    },
+    "resources": {
+        "flares": {
+            "amount": 5,
+            "color": "#F00",
+            "maxAmount": 5,
+            "name": "Flares"
+        },
+        "fuel": {
+            "amount": 6,
+            "color": "#FB1",
+            "maxAmount": 6,
+            "name": "Fuel"
+        }
+    }
+}
