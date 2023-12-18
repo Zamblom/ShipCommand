@@ -1,3 +1,5 @@
+import datetime
+import time
 import os
 import typing
 
@@ -47,10 +49,10 @@ class Application:
             os.path.isfile(f"players/{file}")
         }
 
-        self.ship: ship.Ship = ship.Ship("state/abilities.json", "state/conditions.json", "state/resources.json")
+        self.ship: ship.Ship = ship.Ship("ship.json")
 
         for person in self.players:
-            self.ship.rooms["cockpit"].add_player(person)
+            self.ship.data["decks"]["deckA"]["rooms"]["cockpit"]["players"].append(person)
 
     # noinspection PyUnusedLocal
     @typeguard.typechecked
@@ -82,7 +84,7 @@ class Application:
 
         decoded_payload = decoded_payload.replace("{players}", players)
 
-        return header, decoded_payload.encode("utf-8")
+        return header, decoded_payload.encode()
 
     # noinspection PyUnusedLocal
     @typeguard.typechecked
@@ -92,7 +94,7 @@ class Application:
         header: bytes = ((self.default_header
                          .replace("{data_type}", "text/html")
                          .replace("\r\n\r\n", "\r\nset-cookie: player=" + parameters['player'] + "\r\n\r\n"))
-                         .encode("utf-8"))
+                         .encode())
 
         filename: str = data[0]
         with open("./html/" + filename, "rb") as file:
@@ -108,7 +110,7 @@ class Application:
         header: bytes = ((self.default_header
                          .replace("{data_type}", "text/html")
                          .replace("\r\n\r\n", "\r\nset-cookie: player=DM\r\n\r\n"))
-                         .encode("utf-8"))
+                         .encode())
 
         filename: str = data[0]
         with open("./html/" + filename, "rb") as file:
@@ -197,59 +199,51 @@ class Application:
     # noinspection PyUnusedLocal
     @typeguard.typechecked
     def api_state(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
-        """ parameters -> [], cookies -> [player], data -> [] """
+        """ parameters -> [time], cookies -> [player], data -> [] """
 
+        if "time" not in parameters:
+            return self.request_error()
         if "player" not in cookies:
             return self.request_error()
         if cookies["player"] not in self.players and cookies["player"] != "DM":
             return self.request_error()
 
+        time_format: str = "%Y.%m.%d-%H:%M:%S.%f"
+        last_time: datetime.datetime = datetime.datetime.strptime(parameters["time"], time_format)
+
         header: bytes = self.default_header.replace("{data_type}", "text/data").encode("utf-8")
 
-        json_payload: dict = {
-            "roomsWithPlayers": self.ship.get_rooms_with_players(),
-            "abilities": self.ship.get_abilities(),
-            "conditions": self.ship.get_conditions(),
-            "resources": self.ship.get_resources()
-        }
-
-        if cookies["player"] != "DM":
-            json_payload["currentRoom"] = self.ship.get_room_by_player(cookies["player"])
-            json_payload["connections"] = self.ship.get_connections_by_player(cookies["player"])
+        updates = self.ship.data.get_updated(last_time)
+        json_payload = {"time" : datetime.datetime.now().strftime(time_format), "data": updates if updates is not None else {}}
 
         return header, json.dumps(json_payload).encode()
 
     # noinspection PyUnusedLocal
     @typeguard.typechecked
     def api_move_to_room(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
-        """ parameters -> [room], cookies -> [player], data -> [] """
+        """ parameters -> [time, deck, room], cookies -> [player], data -> [] """
 
-        if "room" not in parameters or "player" not in cookies:
+        if "deck" not in parameters or "room" not in parameters or "player" not in cookies:
             return self.request_error()
-        if parameters["room"] not in self.ship.rooms:
+        if parameters["deck"] not in self.ship.data["decks"]:
+            return self.request_error()
+        if parameters["room"] not in self.ship.data["decks"][parameters["deck"]]["rooms"]:
             return self.request_error()
         if cookies["player"] not in self.players:
             return self.request_error()
 
-        header: bytes = self.default_header.replace("{data_type}", "text/data").encode("utf-8")
+        self.ship.move_player_to_room(cookies["player"], parameters["deck"], parameters["room"])
 
-        self.ship.move_player_to_room(cookies["player"], parameters["room"])
-
-        json_payload: dict = {
-            "currentRoom": self.ship.get_room_by_player(cookies["player"]),
-            "connections": self.ship.get_connections_by_player(cookies["player"])
-        }
-
-        return header, json.dumps(json_payload).encode()
+        return self.api_state(parameters, cookies, data)
 
     # noinspection PyUnusedLocal
     @typeguard.typechecked
     def api_use_ability(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
-        """ parameters -> [ability], cookies -> [player], data -> [] """
+        """ parameters -> [time, ability], cookies -> [player], data -> [] """
 
-        if "ability" not in parameters or "player" not in cookies:
+        if "time" not in parameters or "ability" not in parameters or "player" not in cookies:
             return self.request_error()
-        if parameters["ability"] not in self.ship.abilities:
+        if parameters["ability"] not in self.ship.data["abilities"]:
             return self.request_error()
         if cookies["player"] not in self.players:
             return self.request_error()
@@ -258,11 +252,4 @@ class Application:
 
         self.ship.use_ability(cookies["player"], parameters["ability"])
 
-        json_payload: dict = {
-            "connections": self.ship.get_connections_by_player(cookies["player"]),
-            "abilities": self.ship.get_abilities(),
-            "conditions": self.ship.get_conditions(),
-            "resources": self.ship.get_resources()
-        }
-
-        return header, json.dumps(json_payload).encode()
+        return self.api_state(parameters, cookies, data)

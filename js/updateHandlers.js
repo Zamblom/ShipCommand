@@ -1,81 +1,130 @@
+var time = "0001.01.01-00:00:00.000000"
+
 function handleUpdate(request, caller) {
     switch (request.readyState) {
         case XMLHttpRequest.DONE:
             switch (request.status) {
                 case 200:
-                    const response = JSON.parse(request.responseText);                
-                    if ("roomsWithPlayers" in response) {handleNewPlayerLocations(response.roomsWithPlayers);}
-                    if ("connections" in response) {handleNewConnections(response.connections);}
-                    if ("abilities" in response) {handleNewAbilities(response.abilities);}
-                    if ("conditions" in response) {handleNewConditions(response.conditions);}
-                    if ("resources" in response) {handleNewResources(response.resources);}
-                    if ("playerData" in response) {handleNewPlayerData(response.playerData);}
-                    if ("currentRoom" in response) {handleNewRoom(response.currentRoom);}
+                    const response = JSON.parse(request.responseText);
+
+                    if ("playerData" in response) {
+                        handlePlayerData(response.playerData);
+                        return;
+                    }
+
+                    time = response.time;
+                    const data = response.data;
+
+                    if ("abilities" in data) {handleAbilities(data.abilities)}
+                    if ("decks" in data) {handleDecks(data.decks)}
+                    if ("conditions" in data) {handleConditions(data.conditions)}
+                    if ("resources" in data) {handleResources(data.resources)}
                     break;
                 default:
                     console.log("FAILED: " + caller + " - " + request.status);
+                    break;
             }
             break;
     }
 }
 
-function handleNewPlayerLocations(newPlayerLocations) {
-    for (i in newPlayerLocations) {
-        for (j in newPlayerLocations[i]) {
-            document.getElementById(toKebabCase(i)).addPlayer(newPlayerLocations[i][j]);
+function handleAbilities(newAbilities) {
+    for (ability in newAbilities) {
+        if (!(ability in abilities)) {abilities[ability] = {}}
+        let valueChanged = false;
+        for (stat in newAbilities[ability]) {
+            valueChanged ||= (abilities[ability][stat] !== newAbilities[ability][stat]);
+            abilities[ability][stat] = newAbilities[ability][stat];
+        }
+        if (shownRoom !== undefined && shownRoom.abilities.includes(ability) && valueChanged) {shownRoom.loadInfo();}
+    }
+}
+
+function handleConditions(conditionsData) {
+    for (condition in conditionsData) {
+        const conditionData = conditionsData[condition];
+        if (!(condition in conditions)) {conditions[condition] = {}}
+        for (conditionAttribute in conditionData) {
+            const conditionAttributeData = conditionData[conditionAttribute];
+            conditions[condition][conditionAttribute] = conditionAttributeData;
         }
     }
-}
-
-function handleNewRoom(newCurrentRoomId) {
-    const oldCurrentRoom = currentRoom;
-    const newCurrentRoom = document.getElementById(newCurrentRoomId);
-    if (currentRoom !== newCurrentRoom) {
-        if (currentRoom !== undefined) {currentRoom.classList.remove("current")}
-        newCurrentRoom.classList.add("current");
-        newCurrentRoom.addPlayer(currentPlayer());
-        newCurrentRoom.deck.select()
-        currentRoom = newCurrentRoom;
-    }
-    if (oldCurrentRoom !== currentRoom) {currentRoom.loadInfo()}
-}
-
-function handleNewConnections(newConnections) {
-    for (i in rooms) {
-        if (newConnections.includes(i)) {
-            document.getElementById(i).classList.add("available");
-        } else {
-            document.getElementById(i).classList.remove("available");
-        }
-    }
-}
-
-function handleNewAbilities(newAbilities) {
-    for (i in newAbilities) {
-        if (!(i in abilities)) {abilities[i] = {}}
-        const valueChanged = abilities[i].name !== newAbilities[i].name || abilities[i].enabled !== newAbilities[i].enabled;
-        abilities[i].name = newAbilities[i].name;
-        abilities[i].enabled = newAbilities[i].enabled;
-        if (shownRoom !== undefined && shownRoom.abilities.includes(i) && valueChanged) {shownRoom.loadInfo();}
-    }
-}
-
-function handleNewConditions(newConditions) {
-    for (i in newConditions) {
-        conditions[i].active = newConditions[i].active;
-    } 
     setConditions();
 }
 
-function handleNewResources(newResources) {
-    for (i in newResources) {
-        resources[i].amount = newResources[i].amount;
-        resources[i].maxAmount = newResources[i].maxAmount;
+function handleDecks(decksData) {
+    for (deck in decksData) {
+        const deckData = decksData[deck];
+        let deckElement = document.getElementById(deck);
+        if (deckElement === null) {
+            deckElement = document.getElementById("map").appendChild(document.createElement("ship-deck"));
+            deckElement.id = deck;
+            deckElement.hidden = true;
+        }
+        let newCurrentRoom = false;
+        for (deckAttribute in deckData) {
+            const deckAttributeData = deckData[deckAttribute];
+            switch (deckAttribute) {
+                case "rooms":
+                    for (room in deckAttributeData) {
+                        const roomData = deckAttributeData[room];
+                        let roomElement = document.getElementById(room);
+                        if (roomElement === null) {
+                            roomElement = deckElement.appendChild(document.createElement("ship-room"));
+                            roomElement.id = room;
+                        }
+                        for (roomAttribute in roomData) {
+                            const roomAttributeData = roomData[roomAttribute];
+                            switch (roomAttribute) {
+                                case "players":
+                                    if (roomAttributeData.includes(currentPlayer())) {
+                                        currentRoom = roomElement;
+                                        newCurrentRoom = true;
+                                    }
+                                    roomAttributeData.forEach((player) => {roomElement.addPlayer(player)});
+                                    break;
+                                case "isLink":
+                                    (roomAttributeData) ? (roomElement.classList.add("link")) : (roomElement.classList.remove("link"))
+                                    break;
+                                case "clip-path":
+                                    roomElement.style.clipPath = roomAttributeData;
+                                    break;
+                                default:
+                                    roomElement[roomAttribute] = roomAttributeData;
+                                    break;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    deckElement.setAttribute(deckAttribute, deckAttributeData);
+                    break;
+            }
+        }
+        if (newCurrentRoom) {
+            [...document.getElementsByClassName("current")].forEach((i) => {i.classList.remove("current")});
+            currentRoom.classList.add("current");
+            [...document.getElementsByClassName("available")].forEach((i) => {i.classList.remove("available")});
+            currentRoom.connections.forEach((connection) => {document.getElementById(connection[1]).classList.add("available")});
+            currentRoom.deck.select();
+            currentRoom.loadInfo();
+        }
+    }
+}
+
+function handleResources(resourcesData) {
+    for (resource in resourcesData) {
+        const resourceData = resourcesData[resource];
+        if (!(resource in resources)) {resources[resource] = {}}
+        for (resourceAttribute in resourceData) {
+            const resourceAttributeData = resourceData[resourceAttribute];
+            resources[resource][resourceAttribute] = resourceAttributeData;
+        }
     }
     setResources();
 }
 
-function handleNewPlayerData(newPlayerData) {
+function handlePlayerData(newPlayerData) {
     document.getElementById("player-name").innerText = newPlayerData.name;
     document.getElementById("revert-player").hidden = newPlayerData.id === currentPlayer();
     for (i in newPlayerData.stats) {

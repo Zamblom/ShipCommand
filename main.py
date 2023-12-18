@@ -1,3 +1,6 @@
+import datetime
+import json
+
 import typeguard
 
 import application
@@ -20,9 +23,14 @@ def main():
                 application_instance = application.Application()
                 server_instance.replace_application(application_instance)
             case "REFILL":
-                for resource in application_instance.ship.resources.values():
-                    resource.refill()
+                for resource in application_instance.ship.data["resources"]:
+                    application_instance.ship.data["resources"][resource]["amount"].set(
+                        application_instance.ship.data["resources"][resource]["maxAmount"].get()
+                    )
                 application_instance.ship.validate_abilities()
+            case "SAVE":
+                with open("saveFile.json", "w") as file:
+                    file.write(json.dumps(application_instance.ship.data.get_updated(datetime.datetime(1, 1, 1))))
 
 
 if __name__ == '__main__':

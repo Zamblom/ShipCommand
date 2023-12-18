@@ -57,116 +57,12 @@ ship-room.available:hover {
     background-color: rgba(150, 255, 100, 0.3);
 }
 
-ship-link.available:hover {
+ship-room.link.available:hover {
     background-color: rgba(255, 150, 255, 0.3);
 }
 
 ship-room.current:hover {
     background-color: rgba(50, 255, 50, 0.3);
-}
-
-ship-room#gunTurretB {
-    clip-path: polygon(40% 30%, 60% 30%, 60% 50%, 40% 50%);
-}
-
-ship-room#hatchFromGunTurretB {
-    clip-path: polygon(40% 70%, 60% 70%, 60% 50%, 40% 50%);
-}
-
-ship-room#gunTurretC {
-    clip-path: polygon(40% 30%, 60% 30%, 60% 50%, 40% 50%);
-}
-
-ship-room#hatchFromGunTurretC {
-    clip-path: polygon(40% 70%, 60% 70%, 60% 50%, 40% 50%);
-}
-
-ship-room#corridor {
-    clip-path: polygon(33.6% 41.8%, 33.6% 17%, 41% 17%, 41% 44.6%, 46.1% 44.6%, 46.1% 55.4%, 41% 55.4%, 41% 83%, 33.6% 83%, 33.6% 58.2%, 30% 52.6%, 32% 52.6%, 33% 51.6%, 33% 48.4%, 32% 47.4%, 30% 47.4%);
-}
-
-ship-room#gunBayB {
-    clip-path: polygon(30% 0.6%, 44.5% 0.6%, 44.5% 17%, 30% 17%);
-}
-
-ship-room#gunBayC {
-    clip-path: polygon(30% 99.4%, 44.5% 99.4%, 44.5% 83%, 30% 83%);
-}
-
-ship-room#gunBayD {
-    clip-path: polygon(46.1% 44.6%, 73.5% 44.6%, 73.5% 55.4%, 46.1% 55.4%);
-}
-
-ship-room#ladderToDeckA {
-    clip-path: polygon(30% 52.6%, 32% 52.6%, 33% 51.6%, 33% 48.4%, 32% 47.4%, 30% 47.4%);
-}
-
-ship-room#sledBay {
-    clip-path: polygon(2.8% 23.9%, 33.6% 41.8%, 30% 47.4%, 30% 50%, 1% 50%, 1% 48%, 3% 46%, 3% 42%, 1% 40%, 1% 38%, 3% 36%, 3% 32%, 1% 30%, 1% 28%);
-}
-
-ship-room#engineersQuarter {
-    clip-path: polygon(2.8% 23.9%, 4.8% 19.8%, 30.4% 0.6%, 37.1% 0.6%, 37.1% 41.8%, 33.6% 41.8%);
-}
-
-ship-room#cargoHold {
-    clip-path: polygon(37.1% 41.8%, 37.1% 0.6%, 44.8% 0.6%, 62.8% 14.5%, 64.6% 22.4%, 64.6% 28%, 46.4% 38.8%, 46.4% 44.6%, 41% 44.6%);
-}
-
-ship-room#medBay {
-    clip-path: polygon(46.4% 44.6%, 46.4% 38.8%, 64.6% 28%, 64.6% 22.4%, 73.5% 22.4%, 73.5% 44.6%);
-}
-
-ship-room#cockpit {
-    clip-path: polygon(73.5% 22.4%, 88.3% 22.4%, 99.1% 33.4%, 99.1% 66.6%, 88.3% 77.6%, 73.5% 77.6%);
-}
-
-ship-room#brig {
-    clip-path: polygon(64.6% 55.4%, 64.6% 77.6%, 73.5% 77.6%, 73.5% 55.4%);
-}
-
-ship-room#monitoring {
-    clip-path: polygon(46.4% 55.4%, 46.4% 61.2%, 64.6% 72.0%, 64.6% 55.4%);
-}
-
-ship-room#livingArea {
-    clip-path: polygon(2.8% 76.1%, 33.6% 58.2%, 37.1% 58.2%, 41% 55.4%, 46.4% 55.4%, 46.4% 61.2%, 64.6% 72%, 64.6% 77.6%, 3.4% 77.6%);
-}
-
-ship-room#messHall {
-    clip-path: polygon(37.1% 77.6%, 64.6% 77.6%, 62.8% 85.5%, 44.8% 99.4%, 37.1% 99.4%);
-}
-
-ship-room#crewQuarters {
-    clip-path: polygon(3.4% 77.6%, 37.1% 77.6%, 37.1% 99.4%, 30.4% 99.4%, 4.8% 80.2%);
-}
-
-ship-room#workshop {
-    clip-path: polygon(2.8% 76.1%, 33.6% 58.2%, 30% 52.6%, 30% 50%, 1% 50%, 1% 72%);
-}
-
-ship-room#hallway {
-    clip-path: polygon(33.6% 41.8%, 37.1% 41.8%, 41% 44.6%, 64.6% 44.6%, 64.6% 55.4%, 41% 55.4%, 37.1% 58.2%, 33.6% 58.2%, 30% 52.6%, 32% 51.6%, 32% 50%, 33.5% 50%, 34.5% 54%, 37.25% 55.5%, 40% 54%, 41% 50%, 40% 46%, 37.25% 44.5%, 34.5% 46%, 33.5% 50%, 32% 50%, 32% 48.4%, 30% 47.4%);
-}
-
-ship-room#security {
-    clip-path: polygon(64.6% 44.6%, 73.5% 44.6%, 73.5% 55.4%, 64.6% 55.4%);
-}
-
-ship-room#ladderToDeckB {
-    clip-path: polygon(30% 52.6%, 32% 51.6%, 32% 48.4%, 30% 47.4%);
-}
-
-ship-room#hatchToGunTurretA {
-    clip-path: polygon(33.5% 50%, 34.5% 54%, 37.25% 55.5%, 40% 54%, 41% 50%, 40% 46%, 37.25% 44.5%, 34.5% 46%, 33.5% 50%);
-}
-
-ship-room#hatchToSledA {
-    clip-path: polygon(1% 38%, 3% 36%, 3% 32%, 1% 30%);
-}
-
-ship-room#hatchToSledB {
-    clip-path: polygon(1% 48%, 3% 46%, 3% 42%, 1% 40%);
 }
 
 .counter {

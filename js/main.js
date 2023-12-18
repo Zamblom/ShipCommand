@@ -4,7 +4,7 @@ var shownRoom;
 function useAbility(ability) {
     const request = new XMLHttpRequest();
     request.onreadystatechange = () => {handleUpdate(request, "Use Ability")};
-    request.open("GET", "/api/use_ability?ability=" + ability)
+    request.open("GET", "/api/use_ability?time=" + time + "&ability=" + ability)
     request.send();
 }
 

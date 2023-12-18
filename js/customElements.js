@@ -6,7 +6,7 @@ class ShipDeck extends HTMLElement {
     connectedCallback() {}
 
     select() {
-        [...document.getElementsByTagName("ship-deck-selector")].filter((i) => {return i.deck === this;})[0].select();
+        [...document.getElementsByTagName("ship-deck-selector")].filter((i) => {return i.deck === this.id})[0].select();
     }
 }
 customElements.define("ship-deck", ShipDeck);
@@ -20,19 +20,15 @@ class ShipRoom extends HTMLElement {
     connectedCallback() {
         this.addEventListener("click", this.moveTo);
         this.addEventListener("mouseover", this.loadInfo);
-        this.name = rooms[this.id].name;
-        this.description = rooms[this.id].description;
-        this.center = rooms[this.id].center;
         this.deck = this.parentElement;
-        this.abilities = rooms[this.id].abilities;
     }
 
     addPlayer(player) {
-        [...document.getElementsByTagName(this.tagName)].forEach((i) => {
-            i.removePlayer(player);
-        });
+        if (this.players.has(player)) {return}
+        [...document.getElementsByTagName(this.tagName)].forEach((i) => {i.removePlayer(player)});
         this.players.add(player);
         this.renderPlayers();
+        if (player == currentPlayer()) {return true}
     }
 
     removePlayer(player) {
@@ -70,7 +66,7 @@ class ShipRoom extends HTMLElement {
     moveTo() {
         const request = new XMLHttpRequest();
         request.onreadystatechange = () => {handleUpdate(request, "Move To Room")};
-        request.open("GET", "/api/move_to_room?room=" + this.id);
+        request.open("GET", "/api/move_to_room?time=" + time + "&deck=" + this.deck.id + "&room=" + this.id);
         request.send();
     }
 
@@ -110,18 +106,9 @@ class ShipDeckSelector extends HTMLElement {
     connectedCallback() {
         this.addEventListener("click", this.select);
         this.setStyle();
-        this.deselect();
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        switch (name) {
-            case "deck":
-                this.deck = document.getElementById(newValue);
-                break;
-            case "size":
-                this.size = newValue;
-        }
-    }
+    attributeChangedCallback(name, oldValue, newValue) {this[name] = newValue}
 
     setStyle() {
         this.style.width = "3vw";
@@ -131,29 +118,36 @@ class ShipDeckSelector extends HTMLElement {
 
         this.style.backgroundColor = "#DDD";
 
-        this.style.borderWidth = "0.3vw 0.3vw 0.3vw 0vw";
-        this.style.borderStyle = "solid";
+        this.style.borderColor = "#F50";
         this.style.borderRadius = "0 0.5vw 0.5vw 0";
+        this.style.borderStyle = "solid";
+        this.style.borderWidth = "0.3vw 0.3vw 0.3vw 0vw";
 
         this.style.fontSize = ((this.size === "small") ? (1) : (1.8)) + "vw";
         this.style.fontWeight = "bold";
 
+        this.style.left = "-1%";
+
         this.style.textAlign = "right";
 
         this.style.translate = "0, -50%";
+
+        this.style.zIndex = 10;
     }
 
     select() {
-        [...document.getElementsByTagName(this.tagName)].forEach((i) => {i.deselect();})
+        [...document.getElementsByTagName(this.tagName)].forEach((i) => {i.deselect()})
         this.style.left = "0%";
         this.style.borderColor = "#6A2";
-        this.deck.hidden = false;
+        document.getElementById(this.deck).hidden = false;
     }
 
     deselect() {
         this.style.left = "-1%";
         this.style.borderColor = "#F50";
-        this.deck.hidden = true;
+        if (document.getElementById(this.deck) !== null) {
+            document.getElementById(this.deck).hidden = true;
+        }
     }
 }
 customElements.define("ship-deck-selector", ShipDeckSelector);
