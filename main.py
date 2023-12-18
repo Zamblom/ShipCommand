@@ -3,7 +3,10 @@ import json
 
 import typeguard
 
+typeguard.install_import_hook("application")
 import application
+
+typeguard.install_import_hook("server")
 import server
 
 

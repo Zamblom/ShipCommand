@@ -1,20 +1,14 @@
 import datetime
-import time
 import os
 import typing
 
 import json
-import typeguard
 
-typeguard.install_import_hook("player")
 import player
-
-typeguard.install_import_hook("ship")
 import ship
 
 
 class Application:
-    @typeguard.typechecked
     def __init__(self):
         self.GET: dict[str, tuple[typing.Callable, list[any]]] = {
             "/": (self.get_landing_page, ["landing_page.html"]),
@@ -55,8 +49,8 @@ class Application:
             self.ship.data["decks"]["deckA"]["rooms"]["cockpit"]["players"].append(person)
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
-    def request_error(self) -> tuple[bytes, bytes]:
+    @staticmethod
+    def request_error() -> tuple[bytes, bytes]:
         header: bytes = "\r\n".join([
             "HTTP/1.1 404 NOT FOUND",
             "Content-Type: text/data; charset=utf-8",
@@ -68,7 +62,6 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def get_landing_page(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
@@ -87,7 +80,6 @@ class Application:
         return header, decoded_payload.encode()
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def get_main(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [player], cookies -> [], data -> [filename] """
 
@@ -103,7 +95,6 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def get_override(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
@@ -119,7 +110,6 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def get_html(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
@@ -132,7 +122,6 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def get_css(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
@@ -145,7 +134,6 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def get_js(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
@@ -158,7 +146,6 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def get_image(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [], cookies -> [], data -> [data_type, filename] """
 
@@ -172,7 +159,6 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def api_player_statistics(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [player], cookies -> [],       data -> []
             parameters -> [],       cookies -> [player], data -> [] """
@@ -197,7 +183,6 @@ class Application:
         return header, json.dumps(json_payload).encode()
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def api_state(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [time], cookies -> [player], data -> [] """
 
@@ -219,7 +204,6 @@ class Application:
         return header, json.dumps(json_payload).encode()
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def api_move_to_room(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [time, deck, room], cookies -> [player], data -> [] """
 
@@ -237,7 +221,6 @@ class Application:
         return self.api_state(parameters, cookies, data)
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def api_use_ability(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
         """ parameters -> [time, ability], cookies -> [player], data -> [] """
 
