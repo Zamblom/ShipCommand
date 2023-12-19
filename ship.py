@@ -1,86 +1,11 @@
 from __future__ import annotations
 
-import datetime
 import typing
 
 import json
 import re
 
-
-class Timed:
-    def __init__(self, parent: typing.Optional[Timed], item) -> None:
-        self.parent: typing.Optional[Timed] = parent
-        self.time: datetime.datetime = datetime.datetime.now()
-        if type(item) in [bool, float, int, list, str]:
-            self.value = item
-        elif type(item) == dict:
-            self.value = {k : Timed(self, v) for k, v in item.items()}
-        else:
-            raise TypeError(f"Non-time-able Type: {type(item)}")
-
-    def set_time(self, tab=0):
-        self.time = datetime.datetime.now()
-        if self.parent is not None:
-            self.parent.set_time(tab+1)
-
-    def get(self):
-        return self.value
-
-    def set(self, value):
-        if value != self.value:
-            self.value = value
-            self.set_time()
-
-    def __getitem__(self, indices):
-        return self.value.__getitem__(indices)
-
-    def __setitem__(self, key, value):
-        try:
-            if self.value.__getitem__(key) == value:
-                return
-        except KeyError:
-            pass
-        self.value.__setitem__(key, value)
-        self.set_time()
-
-    def __repr__(self):
-        return str(self)
-
-    def __str__(self):
-        return "<T>" + str(self.value)
-
-    def __hash__(self):
-        return hash(self.value)
-
-    def __iter__(self):
-        return self.value.__iter__()
-
-    def append(self, *args, **kwargs):
-        if not isinstance(self.value, list):
-            raise TypeError(self, "is not List")
-        self.value.append(*args, **kwargs)
-        self.set_time()
-
-    def remove(self, *args, **kwargs):
-        if not isinstance(self.value, list):
-            raise TypeError(self, "is not List")
-        self.value.remove(*args, **kwargs)
-        self.set_time()
-
-    def get_updated(self, time: datetime.datetime, tab=0):
-        if self.time > time:
-            if isinstance(self.value, Timed):
-                return self.value.get_updated(time, tab+1)
-            if type(self.value) in [bool, float, int, list ,str]:
-                return self.value
-            if isinstance(self.value, dict):
-                output = {}
-                for k, v in self.value.items():
-                    value = v.get_updated(time, tab+1)
-                    if value is not None:
-                        output[k] = value
-                return output
-
+import timed
 
 
 class Ship:
@@ -88,7 +13,7 @@ class Ship:
         self.ship_file: str = ship_file
         with open(ship_file, "r") as file:
             data: str = file.read()
-        self.data: Timed = Timed(None, json.loads(data))
+        self.data: timed.TimedDict = timed.build_timed(json.loads(data))
         self.validate_abilities()
 
 
@@ -130,7 +55,7 @@ class Ship:
         return True
 
     def validate_abilities(self):
-        for ability in self.data["abilities"]:
+        for ability in self.data["abilities"].keys():
             self.data["abilities"][ability]["enabled"].set(
                 self.parse_requirement_or_action(
                     self.data["abilities"][ability]["requirement"].get()

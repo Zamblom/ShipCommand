@@ -177,7 +177,7 @@ class Application:
         player_id: str = parameters["player"] if "player" in parameters else cookies["player"]
 
         json_payload: dict = {
-            "playerData": self.players[player_id].get_data(player_id)
+            "playerData": self.players[player_id].get_data()
         }
 
         return header, json.dumps(json_payload).encode()
