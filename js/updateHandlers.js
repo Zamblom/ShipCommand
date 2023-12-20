@@ -66,6 +66,9 @@ function handleDecks(decksData) {
         for (deckAttribute in deckData) {
             const deckAttributeData = deckData[deckAttribute];
             switch (deckAttribute) {
+                case "image":
+                    deckElement.setBackgroundImage(deckAttributeData);
+                    break;
                 case "rooms":
                     for (room in deckAttributeData) {
                         const roomData = deckAttributeData[room];
@@ -126,8 +129,8 @@ function handleResources(resourcesData) {
 }
 
 function handlePlayerData(newPlayerData) {
-    document.getElementById("player-name").innerText = newPlayerData.name;
-    document.getElementById("revert-player").hidden = newPlayerData.id === currentPlayer();
+    document.getElementById("playerName").innerText = newPlayerData.name;
+    document.getElementById("revertPlayer").hidden = newPlayerData.id === currentPlayer();
     for (i in newPlayerData.stats) {
         statFromName(i).innerText = newPlayerData.stats[i];
     }

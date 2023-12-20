@@ -1,6 +1,7 @@
 var currentRoom;
 var shownRoom;
 
+
 function useAbility(ability) {
     const request = new XMLHttpRequest();
     request.onreadystatechange = () => {handleUpdate(request, "Use Ability")};
@@ -18,7 +19,7 @@ document.onkeydown = function (event) {
     }
 
     if (event.code in codeToIndex) {
-        const abilityElement = document.getElementsByClassName("room-ability")[codeToIndex[event.code]];
+        const abilityElement = document.getElementsByClassName("roomAbility")[codeToIndex[event.code]];
         if (abilityElement != null) {abilityElement.click()}
     }
 };

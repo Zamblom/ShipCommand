@@ -23,19 +23,19 @@
             <ship-deck-selector style="top: 45%;" deck="deckB">B</ship-deck-selector>
             <ship-deck-selector style="top: 60%;" deck="deckA">A</ship-deck-selector>
         </div>
-        <div id="room-information">
-            <div id="room-name"></div>
-            <div id="room-data">
-                <div id="room-description"></div>
-                <div id="room-abilities"></div>
+        <div id="roomInformation">
+            <div id="roomName"></div>
+            <div id="roomData">
+                <div id="roomDescription"></div>
+                <div id="roomAbilities"></div>
             </div>
         </div>
     </div>
     <div id="statistics">
         <div id="player">
-            <div id="player-name">Name</div>
-            <div onclick="setPlayerStatistics();" id="revert-player" hidden>Back</div>
-            <table id="stats-table" width="100vw">
+            <div id="playerName">Name</div>
+            <div onclick="setPlayerStatistics()" id="revertPlayer" hidden>Back</div>
+            <table id="statsTable" width="100vw">
                 <colgroup>
                     <col width="12vw">
                     <col width="4.3vw">
@@ -153,22 +153,22 @@
             </table>
         </div>
         <div id="ship">
-            <div id="ship-data">
-                <div id="ship-conditions"></div>
-                <div id="ship-resources">
+            <div id="shipData">
+                <div id="shipConditions"></div>
+                <div id="shipResources">
                 </div>
             </div>
-            <div id="ship-name-border">
-                <div id="ship-name">Ship Status</div>
+            <div id="shipNameBorder">
+                <div id="shipName">Ship Status</div>
             </div>
         </div>
     </div>
-    <div id="dice-container">
-        <div id="click-blocker" onclick="hideDiceDisplay();" hidden></div>
-        <div id="dice-display" hidden>
-            <p id="roll-calculation"></p>
-            <div id="digit-container">
-                <div class="seven-segment" id="digit-1">
+    <div id="diceContainer">
+        <div id="clickBlocker" onclick="hideDiceDisplay();" hidden></div>
+        <div id="diceDisplay" hidden>
+            <p id="rollCalculation"></p>
+            <div id="digitContainer">
+                <div class="sevenSegment" id="digit1">
                     <div></div>
                     <div></div>
                     <div></div>
@@ -177,7 +177,7 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div class="seven-segment" id="digit-2">
+                <div class="sevenSegment" id="digit2">
                     <div></div>
                     <div></div>
                     <div></div>
@@ -187,7 +187,7 @@
                     <div></div>
                 </div>
             </div>
-            <p id="roll-result"></p>
+            <p id="rollResult"></p>
         </div>
     </div>
 </body>

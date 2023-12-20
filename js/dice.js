@@ -5,7 +5,7 @@ function rollByLabel(label) {
 }
 
 function rollByValue(value) {
-    if (document.getElementById("revert-player").hidden) {
+    if (document.getElementById("revertPlayer").hidden) {
         const request = new XMLHttpRequest();
         request.onreadystatechange = () => {
             switch (request.readyState) {
@@ -25,14 +25,14 @@ function rollByValue(value) {
 }
 
 function hideDiceDisplay() {
-    document.getElementById("dice-display").hidden = true;
-    document.getElementById("click-blocker").hidden = true;
+    document.getElementById("diceDisplay").hidden = true;
+    document.getElementById("clickBlocker").hidden = true;
     clearInterval(diceRollInterval);
 }
 
 function showDiceDisplay() {
-    document.getElementById("dice-display").hidden = false;
-    document.getElementById("click-blocker").hidden = false;
+    document.getElementById("diceDisplay").hidden = false;
+    document.getElementById("clickBlocker").hidden = false;
 }
 
 function updateDiceDisplay(number) {
@@ -44,8 +44,8 @@ function updateDiceDisplay(number) {
         digit1 = "-";
         digit2 = -digit2;
     }
-    updateDiceDigit(document.getElementById("digit-1"), digit1);
-    updateDiceDigit(document.getElementById("digit-2"), digit2);
+    updateDiceDigit(document.getElementById("digit1"), digit1);
+    updateDiceDigit(document.getElementById("digit2"), digit2);
 }
 
 function updateDiceDigit(digit, value) {
@@ -135,8 +135,8 @@ function updateDiceDigit(digit, value) {
 }
 
 function rollDiceDisplay(result = 10, modifier = 0) {
-    document.getElementById("roll-result").innerHTML = "Rolling";
-    document.getElementById("roll-calculation").innerHTML = "[1d20 " + ((modifier >= 0) ? ("+") : ("-")) + " " + Math.abs(modifier) + "]";
+    document.getElementById("rollResult").innerHTML = "Rolling";
+    document.getElementById("rollCalculation").innerHTML = "[1d20 " + ((modifier >= 0) ? ("+") : ("-")) + " " + Math.abs(modifier) + "]";
     showDiceDisplay();
     updateDiceDisplay(0);
     var iter = 110;
@@ -148,16 +148,16 @@ function rollDiceDisplay(result = 10, modifier = 0) {
         updateDiceDisplay(roll);
         switch (iter) {
             case 130:
-                document.getElementById("roll-result").innerHTML = "Rolling.";
+                document.getElementById("rollResult").innerHTML = "Rolling.";
                 break;
             case 140:
-                document.getElementById("roll-result").innerHTML = "Rolling..";
+                document.getElementById("rollResult").innerHTML = "Rolling..";
                 break;
             case 150:
-                document.getElementById("roll-result").innerHTML = "Rolling...";
+                document.getElementById("rollResult").innerHTML = "Rolling...";
                 break;
             case 160:
-                document.getElementById("roll-result").innerHTML = "Total -> " + (result);
+                document.getElementById("rollResult").innerHTML = "Total -> " + (result);
                 updateDiceDisplay(result - modifier);
                 clearInterval(diceRollInterval);
                 break;

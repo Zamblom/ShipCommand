@@ -73,6 +73,7 @@
     "decks": {
         "deckA": {
             "name": "Deck A",
+            "image": "deckA.png",
             "rooms": {
                 "brig": {
                     "abilities": [],
@@ -467,6 +468,7 @@
         },
         "deckB": {
             "name": "Deck B",
+            "image": "deckB.png",
             "rooms": {
                 "corridor": {
                     "abilities": [],
@@ -574,6 +576,7 @@
         },
         "gunDeckB": {
             "name": "Gun Deck B",
+            "image": "",
             "rooms": {
                 "gunTurretB": {
                     "abilities": [],
@@ -615,6 +618,7 @@
         },
         "gunDeckC": {
             "name": "Gun Deck C",
+            "image": "",
             "rooms": {
                 "gunTurretC": {
                     "abilities": [],

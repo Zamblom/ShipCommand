@@ -5,11 +5,16 @@ class ShipDeck extends HTMLElement {
 
     connectedCallback() {}
 
+    setBackgroundImage(image) {
+        this.style.backgroundImage = ((image != "") ? ("url('/" + image + "')") : "");
+    }
+
     select() {
         [...document.getElementsByTagName("ship-deck-selector")].filter((i) => {return i.deck === this.id})[0].select();
     }
 }
 customElements.define("ship-deck", ShipDeck);
+
 
 class ShipRoom extends HTMLElement {
     constructor() {
@@ -74,15 +79,15 @@ class ShipRoom extends HTMLElement {
 
     loadInfo(event) {
         if (event !== undefined) {event.stopPropagation()}
-        document.getElementById("room-name").innerText = this.name + ((this !== currentRoom) ? (": Preview") : "");
-        document.getElementById("room-description").innerHTML = this.description;
+        document.getElementById("roomName").innerText = this.name + ((this !== currentRoom) ? (": Preview") : "");
+        document.getElementById("roomDescription").innerHTML = this.description;
     
-        const roomAbilities = document.getElementById("room-abilities");
+        const roomAbilities = document.getElementById("roomAbilities");
         roomAbilities.innerHTML = "";
         this.abilities.forEach((i) => {
             const roomAbility = abilities[i];
             const newRoomAbility = document.createElement("div");
-            newRoomAbility.classList.add("room-ability");
+            newRoomAbility.classList.add("roomAbility");
             if (abilities[i].enabled) {
                 newRoomAbility.classList.add("active");
                 if (this === currentRoom) {
@@ -97,6 +102,7 @@ class ShipRoom extends HTMLElement {
     }
 }
 customElements.define("ship-room", ShipRoom);
+
 
 class ShipDeckSelector extends HTMLElement {
     static observedAttributes = ["deck", "size"];

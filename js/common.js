@@ -1,41 +1,10 @@
 var abilities = {}
+var conditions = {}
+var resources = {}
 
-var conditions = {
-    brigLocked: {
-        name: "Brig Locked",
-        active: false
-    },
-    evasive: {
-        name: "Evasive",
-        active: false
-    },
-    heatSeeking: {
-        name: "Heat Seeking",
-        active: false
-    },
-    targetLocked: {
-        name: "Target-Locked",
-        active: false
-    }
-}
-
-var resources = {
-    fuel: {
-        name: "Fuel",
-        color: "#FB1",
-        amount: 0,
-        maxAmount: 0
-    },
-    flares: {
-        name: "Flares",
-        color: "#F00",
-        amount: 0,
-        maxAmount: 0
-    }
-}
 
 function setConditions() {
-    const shipConditionsElement = document.getElementById("ship-conditions");
+    const shipConditionsElement = document.getElementById("shipConditions");
     let newShipConditionsElementInnerHTML = "";
 
     for (i in conditions) {
@@ -45,8 +14,9 @@ function setConditions() {
     shipConditionsElement.innerHTML = newShipConditionsElementInnerHTML;   
 }
 
+
 function setResources() {
-    const shipResourcesElement = document.getElementById("ship-resources");
+    const shipResourcesElement = document.getElementById("shipResources");
     let newShipResourcesElementInnerHTML = "";
 
     let resourceNameWidth = 20;
@@ -70,6 +40,7 @@ function setResources() {
     shipResourcesElement.innerHTML = newShipResourcesElementInnerHTML;
 }
 
+
 function setPlayerStatistics(player, event) {
     if (event !== undefined) {event.stopPropagation();}
     const request = new XMLHttpRequest();
@@ -77,6 +48,7 @@ function setPlayerStatistics(player, event) {
     request.open("GET", "/api/player_statistics" + ((player !== undefined) ? ("?player=" + player) : ("")));
     request.send();
 }
+
 
 function setState() {
     const request = new XMLHttpRequest();

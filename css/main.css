@@ -1,7 +1,7 @@
 * {
     box-sizing: border-box;
     position: absolute;
-    font-family: Roboto Mono;
+    font-family: "Roboto Mono";
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
@@ -30,14 +30,6 @@ ship-deck {
     height: 100%;
     background-size: 100% 100%;
     aspect-ratio: 20 / 13.2;
-}
-
-ship-deck#deckB {
-    background-image: url("/deck_b.png");
-}
-
-ship-deck#deckA {
-    background-image: url("/deck_a.png");
 }
 
 ship-room {
@@ -78,7 +70,7 @@ ship-room.currentRoom:hover {
     background-color: #0F0;
 }
 
-#room-information {
+#roomInformation {
     top: 50%;
     width: 100%;
     height: 50vh;
@@ -87,7 +79,7 @@ ship-room.currentRoom:hover {
     font-weight: bold;
 }
 
-#room-name {
+#roomName {
     background-color: #CCD;
     clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 0% 100%);
     height: 5vh;
@@ -101,7 +93,7 @@ ship-room.currentRoom:hover {
     padding-left: 1vw;
 }
 
-#room-data {
+#roomData {
     top: 12%;
     left: 50%;
     height: 85%;
@@ -109,21 +101,21 @@ ship-room.currentRoom:hover {
     transform: translate(-50%, 0);
 }
 
-#room-description {
+#roomDescription {
     left: 2.5%;
     width: 45%;
     height: 100%;
     font-size: 1vw;
 }
 
-#room-abilities {
+#roomAbilities {
     left: 52.5%;
     width: 45%;
     height: 40vh;
     font-size: 1vw;
 }
 
-.room-ability {
+.roomAbility {
     position: relative;
     background-color: #DBB;
     border: 0.2vw solid #CAA;
@@ -136,12 +128,12 @@ ship-room.currentRoom:hover {
     text-align: center;
 }
 
-.room-ability.active {
+.roomAbility.active {
     background-color: #FFF;
     border: 0.2vw solid #AAB;
 }
 
-.room-ability.active:hover {
+.roomAbility.active:hover {
     background-color: #BBC;
 }
 
@@ -157,7 +149,7 @@ ship-room.currentRoom:hover {
     background-color: #BBC;
 }
 
-#player-name {
+#playerName {
     height: 17%;
     width: 100%;
     background: #EEF;
@@ -166,7 +158,7 @@ ship-room.currentRoom:hover {
     font-weight: bold;
 }
 
-#revert-player {
+#revertPlayer {
     top: 2.5%;
     left: 1%;
     width: 10%;
@@ -179,11 +171,11 @@ ship-room.currentRoom:hover {
     font-weight: bold;
 }
 
-#revert-player:hover {
+#revertPlayer:hover {
     background-color: #CCD;
 }
 
-#stats-table {
+#statsTable {
     top: 6vh;
     background-color: #EEF;
     border-spacing: 0.2vw;
@@ -195,40 +187,40 @@ ship-room.currentRoom:hover {
     empty-cells: hide;
 }
 
-#stats-table * {
+#statsTable * {
     position: relative;
 }
 
-#stats-table td {
+#statsTable td {
     padding: 0.2vh 0.2vw 0.2vh 0.2vw;
 }
 
-#stats-table .abilities td:nth-child(2n - 1) {
+#statsTable .abilities td:nth-child(2n - 1) {
     font-weight: bold;
 }
 
-#stats-table .abilities td {
+#statsTable .abilities td {
     background-color: #CCD;
     font-size: 0.75vw;
 }
 
-#stats-table .abilities td:hover {
+#statsTable .abilities td:hover {
     background-color: #BBC;
 }
 
-#stats-table .saves td {
+#statsTable .saves td {
     background-color: #D4D4E5
 }
 
-#stats-table .saves td:hover {
+#statsTable .saves td:hover {
     background-color: #C4C4D5;
 }
 
-#stats-table .skills td {
+#statsTable .skills td {
     background-color: #DDE
 }
 
-#stats-table .skills td:hover {
+#statsTable .skills td:hover {
     background-color: #CCD;
 }
 
@@ -238,14 +230,14 @@ ship-room.currentRoom:hover {
     height: 75%;
 }
 
-#ship-name-border {
+#shipNameBorder {
     background-color: #AAA;
     clip-path: polygon(0% 0%, 100% 0%, 88.9% 100%, 0% 100%);
     height: 4.5vh;
     width: 20.4vw;
 }
 
-#ship-name {
+#shipName {
     background-color: #CCD;
     clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%);
     height: 4vh;
@@ -256,21 +248,21 @@ ship-room.currentRoom:hover {
     padding-left: 1vw;
 }
 
-#ship-data {
+#shipData {
     background-color: #EEE;
     width: 100%;
     height: 100%;
     padding: 2%;
 }
 
-#ship-conditions {
+#shipConditions {
     top: 8%;
     width: 50%;
     height: 92%;
     font-size: 1vw;
 }
 
-#ship-resources {
+#shipResources {
     top: 8%;
     left: 50%;
     width: 50%;
@@ -278,17 +270,17 @@ ship-room.currentRoom:hover {
     width: 50%;
 }
 
-#ship-resources * {
+#shipResources * {
     position: relative;
 }
 
-#ship-resources table {
+#shipResources table {
     border-spacing: 0.2vw;
     table-layout: fixed;
     width: 95%;
 }
 
-#ship-resources td {
+#shipResources td {
     background-color: #AAA;
     height: 2.5vh;
     padding: 0.2vh 0.2vw 0.2vh 0.2vw;
@@ -296,20 +288,20 @@ ship-room.currentRoom:hover {
     text-align: center;
 }
 
-#ship-resources td:first-child {
+#shipResources td:first-child {
     border-radius: 0.5vw 0 0 0.5vw;
     font-size: 1vw;
 }
 
-#ship-resources td:nth-child(2) {
+#shipResources td:nth-child(2) {
     clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%);
 }
 
-#ship-resources td:nth-child(n + 3) {
+#shipResources td:nth-child(n + 3) {
     clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
 }
 
-#ship-resources td:last-child {
+#shipResources td:last-child {
     border-radius: 0 0.5vw 0.5vw 0;
     clip-path: polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%);
 }
