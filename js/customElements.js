@@ -23,12 +23,13 @@ class ShipRoom extends HTMLElement {
         this.deck = this.parentElement;
     }
 
-    addPlayer(player) {
-        if (this.players.has(player)) {return}
-        [...document.getElementsByTagName(this.tagName)].forEach((i) => {i.removePlayer(player)});
-        this.players.add(player);
+    addPlayers(players) {
+        players.forEach((player) => {
+            if (this.players.has(player)) {return}
+            [...document.getElementsByTagName(this.tagName)].forEach((i) => {i.removePlayer(player)});
+            this.players.add(player);
+        });
         this.renderPlayers();
-        if (player == currentPlayer()) {return true}
     }
 
     removePlayer(player) {
@@ -54,7 +55,8 @@ class ShipRoom extends HTMLElement {
             const point = {x: points[i][0], y: points[i][1]};
             const newPlayer = document.createElement("div");
             newPlayer.id = player;
-            newPlayer.classList.add("counter");
+            newPlayer.classList.add("player");
+            if (player == currentPlayer()) {newPlayer.classList.add("currentPlayer");}
             newPlayer.setAttribute("onClick", "javascript: setPlayerStatistics(this.id, event);");
             newPlayer.style.left = (point.x + this.center.x) + "%";
             newPlayer.style.top = (point.y + this.center.y) + "%";

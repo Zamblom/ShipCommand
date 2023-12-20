@@ -8,16 +8,22 @@ function useAbility(ability) {
     request.send();
 }
 
-document.onkeypress = function (e) {
-    e = e || window.event;
-    if (e.keyCode >= 49 && e.keyCode <= 57) {
-        const abilityElement = document.getElementsByClassName("room-ability")[e.keyCode - 49];
-        if (abilityElement !== undefined) {abilityElement.click();}
+
+document.onkeydown = function (event) {
+    const codeToIndex = {
+        "Digit1": 0, "Digit2": 1, "Digit3": 2, "Digit4": 3, "Digit5": 4,
+        "Digit6": 5, "Digit7": 6, "Digit8": 7, "Digit9": 8, "Digit0": 9
+    }
+
+    if (event.code in codeToIndex) {
+        const abilityElement = document.getElementsByClassName("room-ability")[codeToIndex[event.code]];
+        if (abilityElement != null) {abilityElement.click()}
     }
 };
+
 
 window.onload = function() {
     setState();
     setPlayerStatistics();
-    setInterval(setState, 5000);
+    setInterval(setState, 2000);
 }

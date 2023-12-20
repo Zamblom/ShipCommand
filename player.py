@@ -15,15 +15,15 @@ class Player:
         with open(f"Players/{self._player_id}.pdf", "rb+") as file:
             binary_data = file.read().split("\n".encode("utf-8"))
 
-        self.raw_data = []
+        self._raw_data = []
         for line in binary_data:
             try:
-                self.raw_data.append(line.decode("utf-8"))
+                self._raw_data.append(line.decode("utf-8"))
             except UnicodeDecodeError:
                 continue
 
         # Why DND Beyond, why?
-        self.name = self.raw_data[self.raw_data.index("/T(CharacterName)") + 6][3:].split(")")[0]
+        self._name = self._raw_data[self._raw_data.index("/T(CharacterName)") + 6][3:].split(")")[0]
 
         self._ability_scores["strength"] = self._parse_value("STRmod", "abilityScore")
         self._ability_scores["dexterity"] = self._parse_value("DEXmod ", "abilityScore")
@@ -65,19 +65,21 @@ class Player:
     def _parse_value(self, name: str, value_type: str) -> int:
         match value_type:
             case "abilityScore":
-                return int(self.raw_data[self.raw_data.index(f"/T({name})") + 36][1:].split(")")[0])
+                return int(self._raw_data[self._raw_data.index(f"/T({name})") + 36][1:].split(")")[0])
             case "skillModifier":
-                return int(self.raw_data[self.raw_data.index(f"/T({name})") + 36][1:].split(")")[0])
+                return int(self._raw_data[self._raw_data.index(f"/T({name})") + 36][1:].split(")")[0])
             case "saveModifier":
-                return int(self.raw_data[self.raw_data.index(f"/T(ST {name})") + 36][1:].split(")")[0])
+                return int(self._raw_data[self._raw_data.index(f"/T(ST {name})") + 36][1:].split(")")[0])
             case _:
                 raise TypeError(f"value_type [{value_type}] is not in [abilityScore, skillModifier, saveModifier]")
+
+    def get_name(self) -> str:
+        return self._name
 
     def get_data(self) -> dict[str, str | dict[str, int]]:
         stats: dict[str, int] = {ability: score_to_modifier(score) for ability, score in self._ability_scores.items()}
         stats.update({skill: modifier for skill, modifier in self._skill_modifiers.items()})
         return {"id": self._player_id, "name": self._name, "stats": stats}
-
 
 
 def score_to_modifier(score: int) -> int:

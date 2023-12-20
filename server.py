@@ -1,14 +1,11 @@
 import socket
 import threading
-import typing
 
-import typeguard
 
 import application
 
 
 class Server:
-    @typeguard.typechecked
     def __init__(self, app: application.Application) -> None:
         self.running: bool = False
 
@@ -16,28 +13,23 @@ class Server:
 
         self.ip: str = "0.0.0.0"
         self.port: int = 80
-        self.socket: typing.Optional[socket.socket] = None
+        self.socket: socket.socket = socket.socket()
 
         self.main_thread: threading.Thread = threading.Thread(target=self.handle_requests, daemon=True)
 
-    @typeguard.typechecked
     def start(self) -> None:
         self.running = True
-        self.socket = socket.socket()
         self.socket.settimeout(1)
         self.socket.bind((self.ip, self.port))
         self.socket.listen(20)
         self.main_thread.start()
 
-    @typeguard.typechecked
     def stop(self) -> None:
         self.running = False
 
-    @typeguard.typechecked
     def replace_application(self, app: application.Application) -> None:
         self.application = app
 
-    @typeguard.typechecked
     def handle_requests(self) -> None:
         while self.running:
             try:
@@ -46,7 +38,6 @@ class Server:
                 pass
 
     # noinspection PyUnusedLocal
-    @typeguard.typechecked
     def handle_request(self, conn: socket.socket, addr: tuple[str, int]) -> None:
         conn.settimeout(1)
 

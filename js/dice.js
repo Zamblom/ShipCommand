@@ -1,14 +1,26 @@
 var diceRollInterval;
 
 function rollByLabel(label) {
-    if (document.getElementById("revert-player").hidden) {
-        rollDiceDisplay(parseInt(label.nextElementSibling.innerHTML));
-    }
+    rollByValue(label.nextElementSibling);
 }
 
 function rollByValue(value) {
     if (document.getElementById("revert-player").hidden) {
-        rollDiceDisplay(parseInt(value.innerHTML));
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = () => {
+            switch (request.readyState) {
+                case XMLHttpRequest.DONE:
+                    switch (request.status) {
+                        case 200:
+                            showDiceDisplay();
+                            rollDiceDisplay(JSON.parse(request.responseText)[0], parseInt(value.innerHTML));
+                            break;
+                    }
+                    break;
+            }
+        }
+        request.open("GET", "/api/roll?modifiers=[" + parseInt(value.innerHTML) + "]");
+        request.send();
     }
 }
 
@@ -122,7 +134,7 @@ function updateDiceDigit(digit, value) {
     }
 }
 
-function rollDiceDisplay(modifier = 0) {
+function rollDiceDisplay(result = 10, modifier = 0) {
     document.getElementById("roll-result").innerHTML = "Rolling";
     document.getElementById("roll-calculation").innerHTML = "[1d20 " + ((modifier >= 0) ? ("+") : ("-")) + " " + Math.abs(modifier) + "]";
     showDiceDisplay();
@@ -131,9 +143,7 @@ function rollDiceDisplay(modifier = 0) {
     var roll = 0;
     diceRollInterval = setInterval(function() {
         var newRoll = roll;
-        while (roll === newRoll) {
-            newRoll = Math.ceil(Math.random() * 20)
-        }
+        while (roll === newRoll) {newRoll = Math.ceil(Math.random() * 20)}
         roll = newRoll;
         updateDiceDisplay(roll);
         switch (iter) {
@@ -147,7 +157,8 @@ function rollDiceDisplay(modifier = 0) {
                 document.getElementById("roll-result").innerHTML = "Rolling...";
                 break;
             case 160:
-                document.getElementById("roll-result").innerHTML = "Total -> " + (roll + modifier);
+                document.getElementById("roll-result").innerHTML = "Total -> " + (result);
+                updateDiceDisplay(result - modifier);
                 clearInterval(diceRollInterval);
                 break;
         }

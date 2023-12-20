@@ -16,9 +16,10 @@ function handleUpdate(request, caller) {
                     const data = response.data;
 
                     if ("abilities" in data) {handleAbilities(data.abilities)}
-                    if ("decks" in data) {handleDecks(data.decks)}
                     if ("conditions" in data) {handleConditions(data.conditions)}
+                    if ("decks" in data) {handleDecks(data.decks)}
                     if ("resources" in data) {handleResources(data.resources)}
+
                     break;
                 default:
                     console.log("FAILED: " + caller + " - " + request.status);
@@ -81,7 +82,7 @@ function handleDecks(decksData) {
                                         currentRoom = roomElement;
                                         newCurrentRoom = true;
                                     }
-                                    roomAttributeData.forEach((player) => {roomElement.addPlayer(player)});
+                                    roomElement.addPlayers(roomAttributeData);
                                     break;
                                 case "isLink":
                                     (roomAttributeData) ? (roomElement.classList.add("link")) : (roomElement.classList.remove("link"))
@@ -102,13 +103,13 @@ function handleDecks(decksData) {
             }
         }
         if (newCurrentRoom) {
-            [...document.getElementsByClassName("current")].forEach((i) => {i.classList.remove("current")});
-            currentRoom.classList.add("current");
-            [...document.getElementsByClassName("available")].forEach((i) => {i.classList.remove("available")});
-            currentRoom.connections.forEach((connection) => {document.getElementById(connection[1]).classList.add("available")});
+            [...document.getElementsByClassName("currentRoom")].forEach((i) => {i.classList.remove("currentRoom")});
+            currentRoom.classList.add("currentRoom");
             currentRoom.deck.select();
             currentRoom.loadInfo();
         }
+        [...document.getElementsByClassName("available")].forEach((i) => {i.classList.remove("available")});
+        currentRoom.connections.forEach((connection) => {document.getElementById(connection[1]).classList.add("available")});
     }
 }
 

@@ -2,49 +2,54 @@
     "abilities": {
         "deployFlares": {
             "actions": [
-                "DEACTIVATE(CONDITION[heatSeeking])",
-                "EXPEND(RESOURCE[flares], INT[1])"
+                ["BOOL[TRUE]", "DEACTIVATE(CONDITION[heatSeeking])"],
+                ["BOOL[TRUE]", "EXPEND(RESOURCE[flares], INT[1])"]
             ],
             "enabled": false,
             "name": "Deploy Flares [R]",
-            "requirement": "AND(ACTIVE(CONDITION[heatSeeking]), GREATER_THAN(AMOUNT(RESOURCE[flares]), INT[0]))"
+            "requirement": "AND(ACTIVE(CONDITION[heatSeeking]), GREATER_THAN(AMOUNT(RESOURCE[flares]), INT[0]))",
+            "rolls": []
         },
         "enterWarp": {
             "actions": [
-                "EXPEND(RESOURCE[fuel], INT[1])"
+                ["BOOL[TRUE]", "EXPEND(RESOURCE[fuel], INT[1])"]
             ],
             "enabled": false,
             "name": "Enter Warp [A]",
-            "requirement": "GREATER_THAN(AMOUNT(RESOURCE[fuel]), INT[0])"
+            "requirement": "GREATER_THAN(AMOUNT(RESOURCE[fuel]), INT[0])",
+            "rolls": []
         },
         "evasiveManoeuvres": {
             "actions": [
-                "ACTIVATE(CONDITION[evasive])",
-                "DEACTIVATE(CONDITION[targetLocked])"
+                ["BOOL[TRUE]", "ACTIVATE(CONDITION[evasive])"],
+                ["BOOL[TRUE]", "DEACTIVATE(CONDITION[targetLocked])"]
             ],
             "enabled": false,
             "name": "Evasive Manoeuvres [R]",
-            "requirement": "AND(ACTIVE(CONDITION[targetLocked]), NOT(ACTIVE(CONDITION[evasive])))"
+            "requirement": "AND(ACTIVE(CONDITION[targetLocked]), NOT(ACTIVE(CONDITION[evasive])))",
+            "rolls": []
         },
         "lockBrigCell": {
             "actions": [
-                "ACTIVATE(CONDITION[brigLocked])",
-                "REMOVE_CONNECTION(ROOM[deckA, brig], STRING[deckA], STRING[monitoring])",
-                "REMOVE_CONNECTION(ROOM[deckA, monitoring], STRING[deckA], STRING[brig])"
+                ["BOOL[TRUE]", "ACTIVATE(CONDITION[brigLocked])"],
+                ["BOOL[TRUE]", "REMOVE_CONNECTION(ROOM[deckA, brig], STRING[deckA], STRING[monitoring])"],
+                ["BOOL[TRUE]", "REMOVE_CONNECTION(ROOM[deckA, monitoring], STRING[deckA], STRING[brig])"]
             ],
             "enabled": false,
             "name": "Lock Brig Cell [A]",
-            "requirement": "NOT(ACTIVE(CONDITION[brigLocked]))"
+            "requirement": "NOT(ACTIVE(CONDITION[brigLocked]))",
+            "rolls": []
         },
         "unlockBrigCell": {
             "actions": [
-                "ADD_CONNECTION(ROOM[deckA, brig], STRING[deckA], STRING[monitoring])",
-                "ADD_CONNECTION(ROOM[deckA, monitoring], STRING[deckA], STRING[brig])",
-                "DEACTIVATE(CONDITION[brigLocked])"
+                ["BOOL[TRUE]", "ADD_CONNECTION(ROOM[deckA, brig], STRING[deckA], STRING[monitoring])"],
+                ["BOOL[TRUE]", "ADD_CONNECTION(ROOM[deckA, monitoring], STRING[deckA], STRING[brig])"],
+                ["BOOL[TRUE]", "DEACTIVATE(CONDITION[brigLocked])"]
             ],
             "enabled": false,
             "name": "Unlock Brig Cell [A]",
-            "requirement": "ACTIVE(CONDITION[brigLocked])"
+            "requirement": "ACTIVE(CONDITION[brigLocked])",
+            "rolls": []
         }
     },
     "conditions": {

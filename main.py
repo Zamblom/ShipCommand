@@ -1,17 +1,11 @@
 import datetime
 import json
 
-import typeguard
-
-typeguard.install_import_hook("application")
 import application
-
-typeguard.install_import_hook("server")
 import server
 
 
-@typeguard.typechecked
-def main():
+def main() -> None:
     application_instance: application.Application = application.Application()
     server_instance: server.Server = server.Server(application_instance)
     server_instance.start()

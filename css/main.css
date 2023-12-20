@@ -61,11 +61,11 @@ ship-room.link.available:hover {
     background-color: rgba(255, 150, 255, 0.3);
 }
 
-ship-room.current:hover {
+ship-room.currentRoom:hover {
     background-color: rgba(50, 255, 50, 0.3);
 }
 
-.counter {
+.player {
     width: 0.65vw;
     aspect-ratio: 1;
     border-radius: 50%;
@@ -74,7 +74,7 @@ ship-room.current:hover {
     transform: translate(-50%, -50%);
 }
 
-.current-counter {
+.currentPlayer {
     background-color: #0F0;
 }
 

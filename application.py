@@ -1,6 +1,7 @@
 import datetime
 import os
-import typing
+import random
+from typing import Any, Callable
 
 import json
 
@@ -8,9 +9,15 @@ import player
 import ship
 
 
+Params = dict[str, str]
+Cookies = dict[str, str]
+Data = list[str]
+Response = tuple[bytes, bytes]
+
+
 class Application:
-    def __init__(self):
-        self.GET: dict[str, tuple[typing.Callable, list[any]]] = {
+    def __init__(self) -> None:
+        self.GET: dict[str, tuple[Callable[[Params, Cookies, Data], Response], Data]] = {
             "/": (self.get_landing_page, ["landing_page.html"]),
             "/main": (self.get_main, ["main.html"]),
             "/override": (self.get_override, ["override.html"]),
@@ -29,6 +36,7 @@ class Application:
             "/api/player_statistics": (self.api_player_statistics, []),
             "/api/state": (self.api_state, []),
             "/api/move_to_room": (self.api_move_to_room, []),
+            "/api/roll": (self.api_roll, []),
             "/api/use_ability": (self.api_use_ability, [])
         }
 
@@ -50,7 +58,7 @@ class Application:
 
     # noinspection PyUnusedLocal
     @staticmethod
-    def request_error() -> tuple[bytes, bytes]:
+    def request_error() -> Response:
         header: bytes = "\r\n".join([
             "HTTP/1.1 404 NOT FOUND",
             "Content-Type: text/data; charset=utf-8",
@@ -62,7 +70,7 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    def get_landing_page(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def get_landing_page(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
         header: bytes = self.default_header.replace("{data_type}", "text/html").encode("utf-8")
@@ -72,15 +80,15 @@ class Application:
             decoded_payload: str = file.read()
 
         players: str = ""
-        for person, details in self.players.items():
-            players += "<a href='/main?player=" + person + "'>" + details.name + "</a><br>"
+        for k, v in self.players.items():
+            players += "<a href='/main?player=" + k + "'>" + v.get_name() + "</a><br>"
 
         decoded_payload = decoded_payload.replace("{players}", players)
 
         return header, decoded_payload.encode()
 
     # noinspection PyUnusedLocal
-    def get_main(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def get_main(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [player], cookies -> [], data -> [filename] """
 
         header: bytes = ((self.default_header
@@ -95,7 +103,7 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    def get_override(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def get_override(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
         header: bytes = ((self.default_header
@@ -110,7 +118,7 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    def get_html(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def get_html(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
         header: bytes = self.default_header.replace("{data_type}", "text/html").encode("utf-8")
@@ -122,7 +130,7 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    def get_css(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def get_css(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
         header: bytes = self.default_header.replace("{data_type}", "text/css").encode("utf-8")
@@ -134,7 +142,7 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    def get_js(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def get_js(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [], cookies -> [], data -> [filename] """
 
         header: bytes = self.default_header.replace("{data_type}", "text/js").encode("utf-8")
@@ -146,7 +154,7 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    def get_image(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def get_image(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [], cookies -> [], data -> [data_type, filename] """
 
         data_type = data[0]
@@ -159,7 +167,7 @@ class Application:
         return header, payload
 
     # noinspection PyUnusedLocal
-    def api_player_statistics(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def api_player_statistics(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [player], cookies -> [],       data -> []
             parameters -> [],       cookies -> [player], data -> [] """
 
@@ -172,18 +180,16 @@ class Application:
             if cookies["player"] not in self.players:
                 return self.request_error()
 
-        header: bytes = self.default_header.replace("{data_type}", "text/data").encode("utf-8")
+        header: bytes = self.default_header.replace("{data_type}", "application/json").encode("utf-8")
 
         player_id: str = parameters["player"] if "player" in parameters else cookies["player"]
 
-        json_payload: dict = {
-            "playerData": self.players[player_id].get_data()
-        }
+        json_payload: dict[str, Any] = {"playerData": self.players[player_id].get_data()}
 
         return header, json.dumps(json_payload).encode()
 
     # noinspection PyUnusedLocal
-    def api_state(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def api_state(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [time], cookies -> [player], data -> [] """
 
         if "time" not in parameters:
@@ -196,15 +202,15 @@ class Application:
         time_format: str = "%Y.%m.%d-%H:%M:%S.%f"
         last_time: datetime.datetime = datetime.datetime.strptime(parameters["time"], time_format)
 
-        header: bytes = self.default_header.replace("{data_type}", "text/data").encode("utf-8")
+        header: bytes = self.default_header.replace("{data_type}", "application/json").encode("utf-8")
 
         updates = self.ship.data.get_updated(last_time)
-        json_payload = {"time" : datetime.datetime.now().strftime(time_format), "data": updates if updates is not None else {}}
+        json_payload = {"time": datetime.datetime.now().strftime(time_format), "data": updates if updates is not None else {}}
 
         return header, json.dumps(json_payload).encode()
 
     # noinspection PyUnusedLocal
-    def api_move_to_room(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def api_move_to_room(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [time, deck, room], cookies -> [player], data -> [] """
 
         if "deck" not in parameters or "room" not in parameters or "player" not in cookies:
@@ -221,7 +227,24 @@ class Application:
         return self.api_state(parameters, cookies, data)
 
     # noinspection PyUnusedLocal
-    def api_use_ability(self, parameters: dict[str, str], cookies: dict[str, str], data: list[any]) -> tuple[bytes, bytes]:
+    def api_roll(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
+        """ parameters -> [modifiers], cookies -> [player], data -> [] """
+        if "modifiers" not in parameters:
+            return self.request_error()
+        if "player" not in cookies or cookies["player"] not in self.players:
+            return self.request_error()
+
+        header: bytes = self.default_header.replace("{data_type}", "application/json").encode("utf-8")
+
+        modifiers: list[int] = [int(i) for i in json.loads(parameters["modifiers"])]
+
+        rolls: list[int] = [random.randint(1, 20) for _ in modifiers]
+        results: list[int] = [rolls[i] + modifiers[i] for i in range(len(rolls))]
+
+        return header, json.dumps(results).encode()
+
+    # noinspection PyUnusedLocal
+    def api_use_ability(self, parameters: Params, cookies: Cookies, data: Data) -> Response:
         """ parameters -> [time, ability], cookies -> [player], data -> [] """
 
         if "time" not in parameters or "ability" not in parameters or "player" not in cookies:
@@ -231,8 +254,7 @@ class Application:
         if cookies["player"] not in self.players:
             return self.request_error()
 
-        header: bytes = self.default_header.replace("{data_type}", "text/data").encode("utf-8")
-
-        self.ship.use_ability(cookies["player"], parameters["ability"])
+        rolls: list[int] = json.loads(parameters["rolls"]) if "rolls" in parameters else []
+        self.ship.use_ability(cookies["player"], parameters["ability"], rolls)
 
         return self.api_state(parameters, cookies, data)
